@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Assertions;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-public class TestContainerInitializationTest extends IntegrationTest {
+public class TestContainerInitializationTest extends IntegrationEnvironment {
     Connection dbConnection = DriverManager.getConnection(
         POSTGRES.getJdbcUrl(),
         POSTGRES.getUsername(),
