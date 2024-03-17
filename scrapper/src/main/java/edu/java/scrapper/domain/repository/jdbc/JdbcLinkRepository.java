@@ -15,6 +15,8 @@ import org.springframework.transaction.annotation.Transactional;
 public class JdbcLinkRepository {
     private final NamedParameterJdbcTemplate jdbcTemplate;
     private final RowMapper<LinkDto> rowMapper = new DataClassRowMapper<>(LinkDto.class);
+    private final String linkId = "linkId";
+    private final String chatId = "chatId";
 
     public JdbcLinkRepository(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = new NamedParameterJdbcTemplate(jdbcTemplate);
@@ -37,7 +39,7 @@ public class JdbcLinkRepository {
         return jdbcTemplate.update(
             "delete from links where link_id = :linkId",
             new MapSqlParameterSource()
-                .addValue("linkId", link.getLinkId())
+                .addValue(linkId, link.getLinkId())
         );
     }
 
@@ -45,8 +47,8 @@ public class JdbcLinkRepository {
         jdbcTemplate.update(
             "insert into links_to_chats(chat_id, link_id) values(:chatId, :linkId)",
             new MapSqlParameterSource()
-                .addValue("linkId", link.getLinkId())
-                .addValue("chatId", chat.getChatId())
+                .addValue(linkId, link.getLinkId())
+                .addValue(chatId, chat.getChatId())
         );
     }
 
@@ -54,8 +56,8 @@ public class JdbcLinkRepository {
         jdbcTemplate.update(
             "delete from links_to_chats where link_id = :linkId and chat_id = :chatId",
             new MapSqlParameterSource()
-                .addValue("linkId", link.getLinkId())
-                .addValue("chatId", chat.getChatId())
+                .addValue(linkId, link.getLinkId())
+                .addValue(chatId, chat.getChatId())
         );
     }
 }
