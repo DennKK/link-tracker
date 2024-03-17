@@ -3,6 +3,8 @@ package edu.java.github;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public record GitHubResponse(
+    // hw5 bonus task
+
     long id,
     String name,
     @JsonProperty("updated_at") String updatedAt,
