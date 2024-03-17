@@ -1,4 +1,4 @@
-package edu.java.controller.api;
+package edu.java.scrapper.controller.api;
 
 import edu.java.payload.dto.request.AddLinkRequest;
 import edu.java.payload.dto.request.RemoveLinkRequest;
