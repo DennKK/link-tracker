@@ -1,7 +1,6 @@
 package edu.java.scrapper.domain.repository.jdbc;
 
 import edu.java.scrapper.domain.dto.ChatDto;
-import edu.java.scrapper.domain.dto.LinkDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.DataClassRowMapper;
 import org.springframework.jdbc.core.RowMapper;
