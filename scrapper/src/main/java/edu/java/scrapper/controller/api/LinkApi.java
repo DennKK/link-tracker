@@ -12,13 +12,12 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 
 @Validated
-public interface ScrapperApi {
+public interface LinkApi {
     @Operation(summary = "Получить все отслеживаемые ссылки", responses = {
         @ApiResponse(responseCode = "200",
                      description = "Ссылки успешно получены",
@@ -54,20 +53,4 @@ public interface ScrapperApi {
                      content = @Content(schema = @Schema(implementation = ApiErrorResponse.class)))})
     @DeleteMapping(value = "/links", produces = {"application/json"}, consumes = {"application/json"})
     LinkResponse linksDelete(@RequestHeader(value = "Tg-Chat-Id") Long tgChatId, @RequestBody RemoveLinkRequest body);
-
-    @Operation(summary = "Удалить чат", responses = {
-        @ApiResponse(responseCode = "200", description = "Чат успешно удалён"),
-        @ApiResponse(responseCode = "400", description = "Некорректные параметры запроса",
-                     content = @Content(schema = @Schema(implementation = ApiErrorResponse.class))),
-        @ApiResponse(responseCode = "404", description = "Чат не существует",
-                     content = @Content(schema = @Schema(implementation = ApiErrorResponse.class)))})
-    @DeleteMapping(value = "/tg-chat/{id}", produces = {"application/json"})
-    void tgChatIdDelete(@PathVariable("id") Long id);
-
-    @Operation(summary = "Зарегистрировать чат", responses = {
-        @ApiResponse(responseCode = "200", description = "Чат зарегистрирован"),
-        @ApiResponse(responseCode = "400", description = "Некорректные параметры запроса",
-                     content = @Content(schema = @Schema(implementation = ApiErrorResponse.class)))})
-    @PostMapping(value = "/tg-chat/{id}", produces = {"application/json"})
-    void tgChatIdPost(@PathVariable("id") Long id);
 }
