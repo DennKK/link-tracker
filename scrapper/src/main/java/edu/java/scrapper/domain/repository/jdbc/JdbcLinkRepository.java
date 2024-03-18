@@ -2,6 +2,7 @@ package edu.java.scrapper.domain.repository.jdbc;
 
 import edu.java.scrapper.domain.dto.ChatDto;
 import edu.java.scrapper.domain.dto.LinkDto;
+import java.util.List;
 import org.springframework.jdbc.core.DataClassRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -43,6 +44,7 @@ public class JdbcLinkRepository {
         );
     }
 
+    @Transactional
     public void map(LinkDto link, ChatDto chat) {
         jdbcTemplate.update(
             "insert into links_to_chats(chat_id, link_id) values(:chatId, :linkId)",
@@ -52,12 +54,36 @@ public class JdbcLinkRepository {
         );
     }
 
+    @Transactional
     public void unmap(LinkDto link, ChatDto chat) {
         jdbcTemplate.update(
             "delete from links_to_chats where link_id = :linkId and chat_id = :chatId",
             new MapSqlParameterSource()
                 .addValue(linkId, link.getLinkId())
                 .addValue(chatId, chat.getChatId())
+        );
+    }
+
+    @Transactional
+    public LinkDto getByUrl(String url) {
+        List<LinkDto> links = jdbcTemplate.query(
+            "select * from links where link = :link",
+            new MapSqlParameterSource().addValue("link", url),
+            rowMapper
+        );
+        return !links.isEmpty() ? links.getFirst() : null;
+    }
+
+    @Transactional
+    public List<LinkDto> findAllByChat(ChatDto chat) {
+        return jdbcTemplate.query(
+            """
+                    SELECT l.* FROM links_to_chats
+                    JOIN links l ON l.link_id = links_to_chats.link_id
+                    WHERE chat_id = :id
+                    """,
+            new BeanPropertySqlParameterSource(chat),
+            rowMapper
         );
     }
 }
