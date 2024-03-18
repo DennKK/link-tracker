@@ -1,4 +1,4 @@
-package edu.java.github;
+package edu.java.client.github;
 
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;

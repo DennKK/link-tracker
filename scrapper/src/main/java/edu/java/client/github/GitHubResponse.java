@@ -1,4 +1,4 @@
-package edu.java.github;
+package edu.java.client.github;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 

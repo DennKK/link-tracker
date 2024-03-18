@@ -1,4 +1,4 @@
-package edu.java.configuration;
+package edu.java.client.configuration;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
