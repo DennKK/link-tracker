@@ -1,6 +1,8 @@
 package edu.java.github;
 
 import com.github.tomakehurst.wiremock.WireMockServer;
+import edu.java.client.github.GitHubClient;
+import edu.java.client.github.GitHubResponse;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
