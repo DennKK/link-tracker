@@ -1,6 +1,6 @@
 package edu.java.scrapper.domain.dto;
 
-import java.sql.Timestamp;
+import java.time.OffsetDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -13,5 +13,5 @@ import lombok.Setter;
 public class LinkDto {
     private Long linkId;
     private String url;
-    private Timestamp updatedAt;
+    private OffsetDateTime updatedAt;
 }
