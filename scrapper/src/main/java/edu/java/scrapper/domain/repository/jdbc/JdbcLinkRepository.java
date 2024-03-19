@@ -95,4 +95,22 @@ public class JdbcLinkRepository {
             rowMapper
         );
     }
+
+    @Transactional
+    public List<ChatDto> getChats(LinkDto link) {
+        return jdbcTemplate.query(
+            "select * from chats where chat_id in (select chat_id from links_to_chats where link_id = :linkId)",
+            new BeanPropertySqlParameterSource(link),
+            new DataClassRowMapper<>(ChatDto.class)
+        );
+    }
+
+    public void update(LinkDto link) {
+        jdbcTemplate.update(
+            "update links set updated_at = :updatedAt where link_id = :linkId",
+            new MapSqlParameterSource()
+                .addValue("updatedAt", link.getUpdatedAt())
+                .addValue(linkId, link.getLinkId())
+        );
+    }
 }
