@@ -17,7 +17,6 @@ import reactor.core.publisher.Mono;
 @Service
 public class BotClient {
     private final WebClient webClient;
-    private final String description = "New update!";
     private final JdbcLinkService jdbcLinkService;
 
     public BotClient(@Qualifier("telegramBotClient") WebClient webClient, JdbcLinkService jdbcLinkService) {
@@ -28,7 +27,7 @@ public class BotClient {
     public void sendUpdateToBot(LinkDto link) {
         List<Long> chats =
             jdbcLinkService.getChatsForLink(link).stream().map(ChatDto::getChatId).toList();
-        LinkUpdateRequest request = new LinkUpdateRequest(link.getLinkId(), link.getUrl(), description, chats);
+        LinkUpdateRequest request = new LinkUpdateRequest(link.getLinkId(), link.getUrl(), "New update", chats);
         update(request);
     }
 
