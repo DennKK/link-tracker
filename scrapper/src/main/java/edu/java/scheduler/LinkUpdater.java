@@ -1,4 +1,4 @@
-package edu.java.scrapper.service;
+package edu.java.scheduler;
 
 public interface LinkUpdater {
     int update();

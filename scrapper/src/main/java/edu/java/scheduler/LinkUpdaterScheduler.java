@@ -1,4 +1,4 @@
-package edu.java.link;
+package edu.java.scheduler;
 
 import java.util.logging.Logger;
 import org.springframework.scheduling.annotation.EnableScheduling;
