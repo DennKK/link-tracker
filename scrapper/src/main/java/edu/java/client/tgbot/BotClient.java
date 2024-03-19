@@ -1,4 +1,4 @@
-package edu.java.client;
+package edu.java.client.tgbot;
 
 import edu.java.client.exception.BotClientException;
 import edu.java.payload.dto.request.LinkUpdateRequest;
