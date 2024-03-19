@@ -1,6 +1,6 @@
 package edu.java.scrapper.domain.dto;
 
-import java.sql.Timestamp;
+import java.time.OffsetDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -12,5 +12,5 @@ import lombok.Setter;
 @NoArgsConstructor
 public class ChatDto {
     private Long chatId;
-    private Timestamp registeredAt;
+    private OffsetDateTime registeredAt;
 }
