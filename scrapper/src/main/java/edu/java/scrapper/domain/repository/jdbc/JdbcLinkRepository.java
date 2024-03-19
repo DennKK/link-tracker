@@ -78,11 +78,20 @@ public class JdbcLinkRepository {
     public List<LinkDto> findAllByChat(ChatDto chat) {
         return jdbcTemplate.query(
             """
-                    SELECT l.* FROM links_to_chats
-                    JOIN links l ON l.link_id = links_to_chats.link_id
-                    WHERE chat_id = :id
-                    """,
+                SELECT l.* FROM links_to_chats
+                JOIN links l ON l.link_id = links_to_chats.link_id
+                WHERE chat_id = :id
+                """,
             new BeanPropertySqlParameterSource(chat),
+            rowMapper
+        );
+    }
+
+    public List<LinkDto> findOlderThan(int minutes) {
+        return jdbcTemplate.query(
+            "select *, now() - updatedAt from links where (now() - updatedAt) > (:interval * interval '1 minute')",
+            new MapSqlParameterSource()
+                .addValue("interval", minutes),
             rowMapper
         );
     }
