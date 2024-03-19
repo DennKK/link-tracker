@@ -5,7 +5,7 @@ import edu.java.scrapper.domain.dto.LinkDto;
 import edu.java.scrapper.domain.repository.jdbc.JdbcLinkRepository;
 import edu.java.scrapper.service.LinkService;
 import java.net.URI;
-import java.sql.Timestamp;
+import java.time.OffsetDateTime;
 import java.util.Collection;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -19,7 +19,7 @@ public class JdbcLinkService implements LinkService {
     public LinkDto add(long tgChatId, URI url) {
         LinkDto link = new LinkDto();
         link.setUrl(url.toString());
-        link.setUpdatedAt(new Timestamp(System.currentTimeMillis()));
+        link.setUpdatedAt(OffsetDateTime.now());
         jdbcLinkRepository.add(link);
         return link;
     }
@@ -34,5 +34,17 @@ public class JdbcLinkService implements LinkService {
     @Override
     public Collection<LinkDto> listAll(long tgChatId) {
         return jdbcLinkRepository.findAllByChat(new ChatDto(tgChatId, null));
+    }
+
+    public Collection<ChatDto> getChatsForLink(LinkDto link) {
+        return jdbcLinkRepository.getChats(link);
+    }
+
+    public Collection<LinkDto> getOldLinks(int minutes) {
+        return jdbcLinkRepository.findOlderThan(minutes);
+    }
+
+    public void updateLink(LinkDto link) {
+        jdbcLinkRepository.update(link);
     }
 }
