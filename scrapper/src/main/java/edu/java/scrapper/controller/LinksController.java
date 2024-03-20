@@ -35,13 +35,14 @@ public class LinksController implements LinkApi {
     @Override
     public LinkResponse linksPost(Long tgChatId, AddLinkRequest body) {
         log.info("Add link request link: {} to chat id: {}", body.link(), tgChatId);
-        LinkDto link = service.add(tgChatId, URI.create(body.link()));
+        service.add(tgChatId, URI.create(body.link()));
         return new LinkResponse(tgChatId, URI.create(body.link()));
     }
 
     @Override
     public LinkResponse linksDelete(Long tgChatId, RemoveLinkRequest body) {
         log.info("Remove link request {} from chat id: {}", body.link(), tgChatId);
-        return null;
+        service.remove(tgChatId, URI.create(body.link()));
+        return new LinkResponse(tgChatId, URI.create(body.link()));
     }
 }
