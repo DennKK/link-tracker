@@ -21,8 +21,7 @@ public class LinkUpdaterScheduler implements LinkUpdater {
     private final GitHubClient gitHubClient;
     private final BotClient botClient;
 
-    @Value("${app.scheduler.update-frequency}")
-    private int updateFrequency;
+    private int updateFrequency = 30;
 
     private static final Logger LOGGER = Logger.getLogger(LinkUpdaterScheduler.class.getName());
 
