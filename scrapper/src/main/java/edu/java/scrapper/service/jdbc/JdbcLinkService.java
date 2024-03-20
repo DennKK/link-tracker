@@ -21,6 +21,7 @@ public class JdbcLinkService implements LinkService {
         link.setUrl(url.toString());
         link.setUpdatedAt(OffsetDateTime.now());
         jdbcLinkRepository.add(link);
+        jdbcLinkRepository.map(link, new ChatDto(tgChatId, null));
         return link;
     }
 
