@@ -2,7 +2,6 @@ app:
   scheduler:
     enable: true
     interval: 10s
-    update-frequency: 30
     force-check-delay: 10s
 
 spring:
