@@ -8,7 +8,6 @@ import java.time.OffsetDateTime;
 import java.util.Collection;
 import java.util.logging.Logger;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
@@ -21,7 +20,7 @@ public class LinkUpdaterScheduler implements LinkUpdater {
     private final GitHubClient gitHubClient;
     private final BotClient botClient;
 
-    private int updateFrequency = 30;
+    private final int updateFrequency = 30;
 
     private static final Logger LOGGER = Logger.getLogger(LinkUpdaterScheduler.class.getName());
 
