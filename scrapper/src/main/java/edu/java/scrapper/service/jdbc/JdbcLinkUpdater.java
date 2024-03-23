@@ -2,8 +2,8 @@ package edu.java.scrapper.service.jdbc;
 
 import edu.java.client.github.GitHubClient;
 import edu.java.client.tgbot.BotClient;
-import edu.java.scrapper.domain.dto.LinkDto;
 import edu.java.scheduler.LinkUpdater;
+import edu.java.scrapper.domain.dto.LinkDto;
 import java.time.OffsetDateTime;
 import java.util.Collection;
 import edu.java.scrapper.domain.repository.jdbc.JdbcLinkRepository;
