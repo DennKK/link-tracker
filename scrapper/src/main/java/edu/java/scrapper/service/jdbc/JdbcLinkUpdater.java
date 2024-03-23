@@ -3,7 +3,7 @@ package edu.java.scrapper.service.jdbc;
 import edu.java.client.github.GitHubClient;
 import edu.java.client.tgbot.BotClient;
 import edu.java.scrapper.domain.dto.LinkDto;
-import edu.java.scrapper.service.LinkUpdater;
+import edu.java.scheduler.LinkUpdater;
 import java.time.OffsetDateTime;
 import java.util.Collection;
 import lombok.RequiredArgsConstructor;
