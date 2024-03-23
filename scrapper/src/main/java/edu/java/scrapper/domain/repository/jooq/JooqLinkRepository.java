@@ -3,6 +3,7 @@ package edu.java.scrapper.domain.repository.jooq;
 import edu.java.scrapper.domain.dto.ChatDto;
 import edu.java.scrapper.domain.dto.LinkDto;
 import java.time.OffsetDateTime;
+import java.util.Collection;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.jooq.DSLContext;
@@ -22,6 +23,22 @@ public class JooqLinkRepository {
         dslContext.insertInto(LINKS)
             .set(LINKS.URL, link.getUrl())
             .set(LINKS.UPDATED_AT, link.getUpdatedAt()).execute();
+    }
+
+    public void update(LinkDto link) {
+        dslContext.update(LINKS)
+            .set(LINKS.URL, link.getUrl())
+            .set(LINKS.UPDATED_AT, link.getUpdatedAt())
+            .where(LINKS.LINK_ID.eq(link.getLinkId().intValue())).execute();
+
+    }
+
+    public Collection<LinkDto> findOlderThan(int minutes) {
+        OffsetDateTime thresholdTime = OffsetDateTime.now().minusMinutes(minutes);
+
+        return dslContext.selectFrom(LINKS)
+            .where(LINKS.UPDATED_AT.lessThan(thresholdTime))
+            .fetchInto(LinkDto.class);
     }
 
     public int remove(LinkDto link) {
