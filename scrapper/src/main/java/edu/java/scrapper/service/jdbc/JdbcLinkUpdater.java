@@ -6,12 +6,13 @@ import edu.java.scrapper.domain.dto.LinkDto;
 import edu.java.scheduler.LinkUpdater;
 import java.time.OffsetDateTime;
 import java.util.Collection;
+import edu.java.scrapper.domain.repository.jdbc.JdbcLinkRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.scheduling.annotation.Scheduled;
 
 @RequiredArgsConstructor
 public class JdbcLinkUpdater implements LinkUpdater {
-    private final JdbcLinkService jdbcLinkService;
+    private final JdbcLinkRepository jdbcLinkRepository;
     private final GitHubClient gitHubClient;
     private final BotClient botClient;
 
@@ -22,14 +23,14 @@ public class JdbcLinkUpdater implements LinkUpdater {
 
     @Scheduled(fixedDelayString = "${app.scheduler.interval}")
     public void update() {
-        Collection<LinkDto> oldLinks = jdbcLinkService.getOldLinks(updateFrequency);
+        Collection<LinkDto> oldLinks = jdbcLinkRepository.findOlderThan(updateFrequency);
 
         for (LinkDto link : oldLinks) {
             OffsetDateTime lastTimeUpdated = getLastUpdateTime(link);
             if (lastTimeUpdated.isAfter(link.getUpdatedAt())) {
                 botClient.sendUpdateToBot(link);
                 link.setUpdatedAt(lastTimeUpdated);
-                jdbcLinkService.updateLink(link);
+                jdbcLinkRepository.update(link);
             }
         }
     }
