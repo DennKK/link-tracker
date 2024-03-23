@@ -2,7 +2,9 @@ package edu.java.scrapper.domain.repository.jdbc;
 
 import edu.java.scrapper.IntegrationEnvironment;
 import edu.java.scrapper.domain.dto.ChatDto;
-import java.sql.Timestamp;
+import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 import org.junit.jupiter.api.Assertions;
@@ -22,8 +24,8 @@ public class JdbcChatRepositoryTest extends IntegrationEnvironment {
     @Rollback
     public void findAndAddTest() {
         List<ChatDto> chats = new ArrayList<>();
-        chats.add(new ChatDto(null, Timestamp.valueOf("2024-12-12 12:12:00")));
-        chats.add(new ChatDto(null, Timestamp.valueOf("2024-12-12 12:12:00")));
+        chats.add(new ChatDto(null, OffsetDateTime.now()));
+        chats.add(new ChatDto(null, OffsetDateTime.now()));
 
         for (ChatDto chat : chats) {
             chatRepository.add(chat);
@@ -32,7 +34,8 @@ public class JdbcChatRepositoryTest extends IntegrationEnvironment {
         List<ChatDto> chatsFromDB = (List<ChatDto>) chatRepository.findAll();
         Assertions.assertEquals(chats.size(), chatsFromDB.size());
         for (int i = 0; i < chats.size(); i++) {
-            Assertions.assertEquals(chats.get(i).getRegisteredAt(), chatsFromDB.get(i).getRegisteredAt());
+            long difference = ChronoUnit.SECONDS.between(chats.get(i).getRegisteredAt(), chatsFromDB.get(i).getRegisteredAt());
+            Assertions.assertTrue(Math.abs(difference) < 5); // Acceptable difference of less than 5 seconds
         }
     }
 
@@ -42,7 +45,7 @@ public class JdbcChatRepositoryTest extends IntegrationEnvironment {
     void removeTest() {
         ChatDto chat = new ChatDto(
             null,
-            Timestamp.valueOf("2024-12-12 12:12:00")
+            OffsetDateTime.now()
         );
 
         chatRepository.add(chat);

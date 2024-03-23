@@ -1,5 +1,6 @@
 app:
   scheduler:
+    update-frequency: 30
     enable: true
     interval: 10s
     force-check-delay: 10s

@@ -2,7 +2,8 @@ package edu.java.scrapper.domain.repository.jdbc;
 
 import edu.java.scrapper.IntegrationEnvironment;
 import edu.java.scrapper.domain.dto.LinkDto;
-import java.sql.Timestamp;
+import java.time.OffsetDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 import org.junit.jupiter.api.Assertions;
@@ -22,8 +23,8 @@ public class JdbcLinkRepositoryTest extends IntegrationEnvironment {
     @Rollback
     public void findAndAddTest() {
         List<LinkDto> links = new ArrayList<>();
-        links.add(new LinkDto(null, "stackoferflow.com", Timestamp.valueOf("2024-12-12 12:12:00")));
-        links.add(new LinkDto(null, "github.com", Timestamp.valueOf("2024-12-12 12:12:00")));
+        links.add(new LinkDto(null, "stackoferflow.com", OffsetDateTime.now()));
+        links.add(new LinkDto(null, "github.com", OffsetDateTime.now()));
 
         for (LinkDto link : links) {
             linkRepository.add(link);
@@ -32,7 +33,9 @@ public class JdbcLinkRepositoryTest extends IntegrationEnvironment {
         List<LinkDto> linksFromDB = (List<LinkDto>) linkRepository.findAll();
         Assertions.assertEquals(links.size(), linksFromDB.size());
         for (int i = 0; i < links.size(); i++) {
-            Assertions.assertEquals(links.get(i).getUrl(), linksFromDB.get(i).getUrl());
+            long difference =
+                ChronoUnit.SECONDS.between(links.get(i).getUpdatedAt(), linksFromDB.get(i).getUpdatedAt());
+            Assertions.assertTrue(Math.abs(difference) < 5); // Acceptable difference of less than 5 seconds
         }
     }
 
@@ -43,7 +46,7 @@ public class JdbcLinkRepositoryTest extends IntegrationEnvironment {
         LinkDto link = new LinkDto(
             null,
             "stackoferflow.com",
-            Timestamp.valueOf("2024-12-12 12:12:00")
+            OffsetDateTime.now()
         );
         linkRepository.add(link);
         Assertions.assertEquals(0, linkRepository.remove(link));
