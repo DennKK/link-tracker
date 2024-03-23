@@ -4,9 +4,9 @@ import edu.java.client.github.GitHubClient;
 import edu.java.client.tgbot.BotClient;
 import edu.java.scheduler.LinkUpdater;
 import edu.java.scrapper.domain.dto.LinkDto;
+import edu.java.scrapper.domain.repository.jdbc.JdbcLinkRepository;
 import java.time.OffsetDateTime;
 import java.util.Collection;
-import edu.java.scrapper.domain.repository.jdbc.JdbcLinkRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.scheduling.annotation.Scheduled;
 
