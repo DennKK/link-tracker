@@ -14,6 +14,8 @@ import org.springframework.scheduling.annotation.Scheduled;
 public abstract class LinkUpdaterBase implements LinkUpdater {
     protected GitHubClient gitHubClient;
     protected BotClient botClient;
+    // Падают jdbc тесты, если подтягивать значение из application.yaml. Временно оставляю так
+    // TODO: Refactor to use value from application.yaml
     protected int updateFrequency = 10;
 
     protected abstract LinkRepository getLinkRepository();
@@ -31,7 +33,7 @@ public abstract class LinkUpdaterBase implements LinkUpdater {
         }
     }
 
-    // TODO: url parser
+    // TODO: Create url parser
     // В предыдущих заданиях нигде не было необходимости парсить ссылки
     // Хотелось бы отличать ссылку на stackoverflow и github друга от друга и от других ссылок
     // Распарсиватель ссылок пока не готов, поэтому оставляю заглушку
