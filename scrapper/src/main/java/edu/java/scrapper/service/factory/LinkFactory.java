@@ -1,10 +1,12 @@
-package edu.java.scrapper.service;
+package edu.java.scrapper.service.factory;
 
 import edu.java.scrapper.domain.dto.LinkDto;
 import edu.java.scrapper.domain.entity.LinkEntity;
 import java.net.URI;
 import java.time.OffsetDateTime;
+import lombok.experimental.UtilityClass;
 
+@UtilityClass
 public class LinkFactory {
     public static LinkDto createLinkDto(URI url) {
         LinkDto link = new LinkDto();
