@@ -37,14 +37,17 @@ public class JdbcLinkService implements LinkService {
         return jdbcLinkRepository.findAllByChat(new ChatDto(tgChatId, null));
     }
 
+    @Override
     public Collection<ChatDto> getChatsForLink(LinkDto link) {
         return jdbcLinkRepository.getChats(link);
     }
 
-    public Collection<LinkDto> getOldLinks(int minutes) {
+    @Override
+    public Collection<LinkDto> getOlderThan(int minutes) {
         return jdbcLinkRepository.findOlderThan(minutes);
     }
 
+    @Override
     public void updateLink(LinkDto link) {
         jdbcLinkRepository.update(link);
     }
