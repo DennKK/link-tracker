@@ -3,9 +3,9 @@ package edu.java.scrapper.service.jooq;
 import edu.java.scrapper.domain.dto.ChatDto;
 import edu.java.scrapper.domain.dto.LinkDto;
 import edu.java.scrapper.domain.repository.jooq.JooqLinkRepository;
+import edu.java.scrapper.service.LinkFactory;
 import edu.java.scrapper.service.LinkService;
 import java.net.URI;
-import java.time.OffsetDateTime;
 import java.util.Collection;
 import lombok.RequiredArgsConstructor;
 
@@ -15,9 +15,7 @@ public class JooqLinkService implements LinkService {
 
     @Override
     public LinkDto add(long tgChatId, URI url) {
-        LinkDto link = new LinkDto();
-        link.setUrl(String.valueOf(url));
-        link.setUpdatedAt(OffsetDateTime.now());
+        LinkDto link = LinkFactory.createLinkDto(url);
         jooqLinkRepository.add(link);
         jooqLinkRepository.map(link, new ChatDto(tgChatId, null));
         return link;

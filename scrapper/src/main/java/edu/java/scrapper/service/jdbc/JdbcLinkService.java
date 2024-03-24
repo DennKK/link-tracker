@@ -3,9 +3,9 @@ package edu.java.scrapper.service.jdbc;
 import edu.java.scrapper.domain.dto.ChatDto;
 import edu.java.scrapper.domain.dto.LinkDto;
 import edu.java.scrapper.domain.repository.jdbc.JdbcLinkRepository;
+import edu.java.scrapper.service.LinkFactory;
 import edu.java.scrapper.service.LinkService;
 import java.net.URI;
-import java.time.OffsetDateTime;
 import java.util.Collection;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -17,9 +17,7 @@ public class JdbcLinkService implements LinkService {
 
     @Override
     public LinkDto add(long tgChatId, URI url) {
-        LinkDto link = new LinkDto();
-        link.setUrl(url.toString());
-        link.setUpdatedAt(OffsetDateTime.now());
+        LinkDto link = LinkFactory.createLinkDto(url);
         jdbcLinkRepository.add(link);
         jdbcLinkRepository.map(link, new ChatDto(tgChatId, null));
         return link;
@@ -39,13 +37,5 @@ public class JdbcLinkService implements LinkService {
 
     public Collection<ChatDto> getChatsForLink(LinkDto link) {
         return jdbcLinkRepository.getChats(link);
-    }
-
-    public Collection<LinkDto> getOldLinks(int minutes) {
-        return jdbcLinkRepository.findOlderThan(minutes);
-    }
-
-    public void updateLink(LinkDto link) {
-        jdbcLinkRepository.update(link);
     }
 }
