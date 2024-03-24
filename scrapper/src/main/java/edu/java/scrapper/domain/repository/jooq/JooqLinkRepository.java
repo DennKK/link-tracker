@@ -5,17 +5,18 @@ import edu.java.scrapper.domain.dto.LinkDto;
 import edu.java.scrapper.domain.repository.LinkRepository;
 import java.time.OffsetDateTime;
 import java.util.Collection;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.jooq.DSLContext;
 import org.jooq.Record;
 import org.jooq.Result;
+import org.springframework.stereotype.Repository;
 import static edu.java.scrapper.domain.jooq_generated.Tables.CHATS;
 import static edu.java.scrapper.domain.jooq_generated.Tables.LINKS;
 import static edu.java.scrapper.domain.jooq_generated.Tables.LINKS_TO_CHATS;
 import static org.jooq.impl.DSL.field;
 import static org.jooq.impl.DSL.table;
 
+@Repository
 @RequiredArgsConstructor
 public class JooqLinkRepository implements LinkRepository {
     private final DSLContext dslContext;
@@ -37,7 +38,7 @@ public class JooqLinkRepository implements LinkRepository {
     }
 
     @Override
-    public List<ChatDto> getChats(LinkDto link) {
+    public Collection<ChatDto> getChats(LinkDto link) {
         return dslContext.select()
             .from(CHATS)
             .join(LINKS_TO_CHATS).on(CHATS.CHAT_ID.eq(LINKS_TO_CHATS.CHAT_ID))
@@ -68,14 +69,15 @@ public class JooqLinkRepository implements LinkRepository {
     }
 
     @Override
-    public void unmap(LinkDto link, ChatDto chat) {
+    public void unmap(Long linkId, Long chatId) {
         dslContext.delete(LINKS_TO_CHATS)
-            .where(LINKS.LINK_ID.eq(link.getLinkId()))
-            .and(CHATS.CHAT_ID.eq(chat.getChatId())).execute();
+            .where(LINKS_TO_CHATS.LINK_ID.eq(linkId))
+            .and(LINKS_TO_CHATS.CHAT_ID.eq(chatId))
+            .execute();
     }
 
     @Override
-    public List<LinkDto> findAllByChat(ChatDto chatDto) {
+    public Collection<LinkDto> findAllByChat(ChatDto chatDto) {
         String linkIdFromLinks = "links.link_id";
         String chatIdFromChat = "chats.chat_id";
 
@@ -101,7 +103,7 @@ public class JooqLinkRepository implements LinkRepository {
     }
 
     @Override
-    public List<LinkDto> findAll() {
+    public Iterable<LinkDto> findAll() {
         return dslContext.selectFrom(LINKS).fetchInto(LinkDto.class);
     }
 }

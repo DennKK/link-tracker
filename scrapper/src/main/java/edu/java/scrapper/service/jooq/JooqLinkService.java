@@ -24,12 +24,27 @@ public class JooqLinkService implements LinkService {
     @Override
     public LinkDto remove(long tgChatId, URI url) {
         LinkDto link = jooqLinkRepository.getByUrl(url.toString());
-        jooqLinkRepository.unmap(link, new ChatDto(tgChatId, null));
+        jooqLinkRepository.unmap(link.getLinkId(), tgChatId);
         return link;
     }
 
     @Override
     public Collection<LinkDto> listAll(long tgChatId) {
         return jooqLinkRepository.findAllByChat(new ChatDto(tgChatId, null));
+    }
+
+    @Override
+    public Collection<LinkDto> getOlderThan(int minutes) {
+        return jooqLinkRepository.findOlderThan(minutes);
+    }
+
+    @Override
+    public void updateLink(LinkDto link) {
+        jooqLinkRepository.update(link);
+    }
+
+    @Override
+    public Collection<ChatDto> getChatsForLink(LinkDto link) {
+        return jooqLinkRepository.getChats(link);
     }
 }

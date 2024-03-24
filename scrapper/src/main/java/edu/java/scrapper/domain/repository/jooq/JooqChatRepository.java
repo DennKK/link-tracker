@@ -5,9 +5,11 @@ import edu.java.scrapper.domain.repository.ChatRepository;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.jooq.DSLContext;
+import org.springframework.stereotype.Repository;
 import static edu.java.scrapper.domain.jooq_generated.Tables.CHATS;
 import static edu.java.scrapper.domain.jooq_generated.Tables.LINKS;
 
+@Repository
 @RequiredArgsConstructor
 public class JooqChatRepository implements ChatRepository {
     private final DSLContext dslContext;
