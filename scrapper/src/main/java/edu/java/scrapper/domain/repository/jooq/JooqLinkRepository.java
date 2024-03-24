@@ -34,7 +34,6 @@ public class JooqLinkRepository implements LinkRepository {
             .set(LINKS.URL, link.getUrl())
             .set(LINKS.UPDATED_AT, link.getUpdatedAt())
             .where(LINKS.LINK_ID.eq(link.getLinkId())).execute();
-
     }
 
     @Override
