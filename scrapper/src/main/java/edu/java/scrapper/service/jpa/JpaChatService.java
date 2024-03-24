@@ -3,8 +3,8 @@ package edu.java.scrapper.service.jpa;
 import edu.java.scrapper.domain.entity.ChatEntity;
 import edu.java.scrapper.domain.repository.jpa.JpaChatRepository;
 import edu.java.scrapper.service.ChatService;
-import lombok.RequiredArgsConstructor;
 import java.time.OffsetDateTime;
+import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 public class JpaChatService implements ChatService {
