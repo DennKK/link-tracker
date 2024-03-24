@@ -26,7 +26,7 @@ public class JooqLinkService implements LinkService {
     @Override
     public LinkDto remove(long tgChatId, URI url) {
         LinkDto link = jooqLinkRepository.getByUrl(url.toString());
-        jooqLinkRepository.unmap(link, new ChatDto(tgChatId, null));
+        jooqLinkRepository.unmap(link.getLinkId(), tgChatId);
         return link;
     }
 

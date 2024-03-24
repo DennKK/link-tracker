@@ -28,7 +28,7 @@ public class JdbcLinkService implements LinkService {
     @Override
     public LinkDto remove(long tgChatId, URI url) {
         LinkDto link = jdbcLinkRepository.getByUrl(url.toString());
-        jdbcLinkRepository.unmap(link, new ChatDto(tgChatId, null));
+        jdbcLinkRepository.unmap(link.getLinkId(), tgChatId);
         return link;
     }
 

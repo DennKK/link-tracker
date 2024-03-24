@@ -13,7 +13,7 @@ public interface LinkRepository {
 
     void map(LinkDto link, ChatDto chat);
 
-    void unmap(LinkDto link, ChatDto chat);
+    void unmap(Long linkId, Long chatId);
 
     Collection<LinkDto> findAllByChat(ChatDto chatDto);
 

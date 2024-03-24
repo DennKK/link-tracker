@@ -69,10 +69,11 @@ public class JooqLinkRepository implements LinkRepository {
     }
 
     @Override
-    public void unmap(LinkDto link, ChatDto chat) {
+    public void unmap(Long linkId, Long chatId) {
         dslContext.delete(LINKS_TO_CHATS)
-            .where(LINKS.LINK_ID.eq(link.getLinkId()))
-            .and(CHATS.CHAT_ID.eq(chat.getChatId())).execute();
+            .where(LINKS_TO_CHATS.LINK_ID.eq(linkId))
+            .and(LINKS_TO_CHATS.CHAT_ID.eq(chatId))
+            .execute();
     }
 
     @Override

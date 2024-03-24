@@ -19,8 +19,8 @@ import org.springframework.transaction.annotation.Transactional;
 public class JdbcLinkRepository implements LinkRepository {
     private final NamedParameterJdbcTemplate jdbcTemplate;
     private final RowMapper<LinkDto> rowMapper = new DataClassRowMapper<>(LinkDto.class);
-    private final String linkId = "linkId";
-    private final String chatId = "chatId";
+    private final String linkIdString = "linkId";
+    private final String chatIdString = "chatId";
 
     @Override
     public Iterable<LinkDto> findAll() {
@@ -42,7 +42,7 @@ public class JdbcLinkRepository implements LinkRepository {
         return jdbcTemplate.update(
             "delete from links where link_id = :linkId",
             new MapSqlParameterSource()
-                .addValue(linkId, link.getLinkId())
+                .addValue(linkIdString, link.getLinkId())
         );
     }
 
@@ -52,19 +52,19 @@ public class JdbcLinkRepository implements LinkRepository {
         jdbcTemplate.update(
             "insert into links_to_chats(chat_id, link_id) values(:chatId, :linkId)",
             new MapSqlParameterSource()
-                .addValue(linkId, link.getLinkId())
-                .addValue(chatId, chat.getChatId())
+                .addValue(linkIdString, link.getLinkId())
+                .addValue(chatIdString, chat.getChatId())
         );
     }
 
     @Override
     @Transactional
-    public void unmap(LinkDto link, ChatDto chat) {
+    public void unmap(Long linkId, Long chatId) {
         jdbcTemplate.update(
             "delete from links_to_chats where link_id = :linkId and chat_id = :chatId",
             new MapSqlParameterSource()
-                .addValue(linkId, link.getLinkId())
-                .addValue(chatId, chat.getChatId())
+                .addValue(linkIdString, linkId)
+                .addValue(chatIdString, chatId)
         );
     }
 
@@ -119,7 +119,7 @@ public class JdbcLinkRepository implements LinkRepository {
             "update links set updated_at = :updatedAt where link_id = :linkId",
             new MapSqlParameterSource()
                 .addValue("updatedAt", link.getUpdatedAt())
-                .addValue(linkId, link.getLinkId())
+                .addValue(linkIdString, link.getLinkId())
         );
     }
 }
