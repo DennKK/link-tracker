@@ -7,6 +7,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToMany;
+import jakarta.persistence.Table;
 import java.time.OffsetDateTime;
 import java.util.HashSet;
 import java.util.Set;
@@ -18,11 +19,12 @@ import lombok.Setter;
 @Entity
 @Getter
 @Setter
+@Table(name = "links")
 @AllArgsConstructor
 @NoArgsConstructor
 public class LinkEntity {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "link_id")
     private Long linkId;
     private String url;
