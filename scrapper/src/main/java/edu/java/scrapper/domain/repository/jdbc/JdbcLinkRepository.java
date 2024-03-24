@@ -3,8 +3,9 @@ package edu.java.scrapper.domain.repository.jdbc;
 import edu.java.scrapper.domain.dto.ChatDto;
 import edu.java.scrapper.domain.dto.LinkDto;
 import java.util.List;
+import edu.java.scrapper.domain.repository.LinkRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.DataClassRowMapper;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -13,20 +14,19 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 @Repository
-public class JdbcLinkRepository {
+@RequiredArgsConstructor
+public class JdbcLinkRepository implements LinkRepository {
     private final NamedParameterJdbcTemplate jdbcTemplate;
     private final RowMapper<LinkDto> rowMapper = new DataClassRowMapper<>(LinkDto.class);
     private final String linkId = "linkId";
     private final String chatId = "chatId";
 
-    public JdbcLinkRepository(JdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = new NamedParameterJdbcTemplate(jdbcTemplate);
-    }
-
+    @Override
     public Iterable<LinkDto> findAll() {
         return jdbcTemplate.query("select * from links", rowMapper);
     }
 
+    @Override
     @Transactional
     public void add(LinkDto link) {
         jdbcTemplate.update(
@@ -35,6 +35,7 @@ public class JdbcLinkRepository {
         );
     }
 
+    @Override
     @Transactional
     public int remove(LinkDto link) {
         return jdbcTemplate.update(
@@ -44,6 +45,7 @@ public class JdbcLinkRepository {
         );
     }
 
+    @Override
     @Transactional
     public void map(LinkDto link, ChatDto chat) {
         jdbcTemplate.update(
@@ -54,6 +56,7 @@ public class JdbcLinkRepository {
         );
     }
 
+    @Override
     @Transactional
     public void unmap(LinkDto link, ChatDto chat) {
         jdbcTemplate.update(
@@ -64,6 +67,7 @@ public class JdbcLinkRepository {
         );
     }
 
+    @Override
     @Transactional
     public LinkDto getByUrl(String url) {
         List<LinkDto> links = jdbcTemplate.query(
@@ -74,6 +78,7 @@ public class JdbcLinkRepository {
         return !links.isEmpty() ? links.getFirst() : null;
     }
 
+    @Override
     @Transactional
     public List<LinkDto> findAllByChat(ChatDto chat) {
         return jdbcTemplate.query(
@@ -87,6 +92,7 @@ public class JdbcLinkRepository {
         );
     }
 
+    @Override
     public List<LinkDto> findOlderThan(int minutes) {
         return jdbcTemplate.query(
             "select *, now() - updatedAt from links where (now() - updatedAt) > (:interval * interval '1 minute')",
@@ -96,6 +102,7 @@ public class JdbcLinkRepository {
         );
     }
 
+    @Override
     @Transactional
     public List<ChatDto> getChats(LinkDto link) {
         return jdbcTemplate.query(
@@ -105,6 +112,7 @@ public class JdbcLinkRepository {
         );
     }
 
+    @Override
     public void update(LinkDto link) {
         jdbcTemplate.update(
             "update links set updated_at = :updatedAt where link_id = :linkId",
