@@ -3,6 +3,7 @@ package edu.java.scrapper.domain.repository.jdbc;
 import edu.java.scrapper.domain.dto.ChatDto;
 import edu.java.scrapper.domain.dto.LinkDto;
 import edu.java.scrapper.domain.repository.LinkRepository;
+import java.util.Collection;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.DataClassRowMapper;
@@ -80,7 +81,7 @@ public class JdbcLinkRepository implements LinkRepository {
 
     @Override
     @Transactional
-    public List<LinkDto> findAllByChat(ChatDto chat) {
+    public Collection<LinkDto> findAllByChat(ChatDto chat) {
         return jdbcTemplate.query(
             """
                 SELECT l.* FROM links_to_chats
@@ -93,7 +94,7 @@ public class JdbcLinkRepository implements LinkRepository {
     }
 
     @Override
-    public List<LinkDto> findOlderThan(int minutes) {
+    public Collection<LinkDto> findOlderThan(int minutes) {
         return jdbcTemplate.query(
             "select *, now() - updatedAt from links where (now() - updatedAt) > (:interval * interval '1 minute')",
             new MapSqlParameterSource()
@@ -104,7 +105,7 @@ public class JdbcLinkRepository implements LinkRepository {
 
     @Override
     @Transactional
-    public List<ChatDto> getChats(LinkDto link) {
+    public Collection<ChatDto> getChats(LinkDto link) {
         return jdbcTemplate.query(
             "select * from chats where chat_id in (select chat_id from links_to_chats where link_id = :linkId)",
             new BeanPropertySqlParameterSource(link),

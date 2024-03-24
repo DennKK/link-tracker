@@ -5,7 +5,6 @@ import edu.java.scrapper.domain.dto.LinkDto;
 import edu.java.scrapper.domain.repository.LinkRepository;
 import java.time.OffsetDateTime;
 import java.util.Collection;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.jooq.DSLContext;
 import org.jooq.Record;
@@ -39,7 +38,7 @@ public class JooqLinkRepository implements LinkRepository {
     }
 
     @Override
-    public List<ChatDto> getChats(LinkDto link) {
+    public Collection<ChatDto> getChats(LinkDto link) {
         return dslContext.select()
             .from(CHATS)
             .join(LINKS_TO_CHATS).on(CHATS.CHAT_ID.eq(LINKS_TO_CHATS.CHAT_ID))
@@ -77,7 +76,7 @@ public class JooqLinkRepository implements LinkRepository {
     }
 
     @Override
-    public List<LinkDto> findAllByChat(ChatDto chatDto) {
+    public Collection<LinkDto> findAllByChat(ChatDto chatDto) {
         String linkIdFromLinks = "links.link_id";
         String chatIdFromChat = "chats.chat_id";
 
@@ -103,7 +102,7 @@ public class JooqLinkRepository implements LinkRepository {
     }
 
     @Override
-    public List<LinkDto> findAll() {
+    public Iterable<LinkDto> findAll() {
         return dslContext.selectFrom(LINKS).fetchInto(LinkDto.class);
     }
 }

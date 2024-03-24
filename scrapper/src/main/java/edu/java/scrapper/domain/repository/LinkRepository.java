@@ -3,7 +3,6 @@ package edu.java.scrapper.domain.repository;
 import edu.java.scrapper.domain.dto.ChatDto;
 import edu.java.scrapper.domain.dto.LinkDto;
 import java.util.Collection;
-import java.util.List;
 
 public interface LinkRepository {
     Iterable<LinkDto> findAll();
@@ -16,7 +15,7 @@ public interface LinkRepository {
 
     void unmap(LinkDto link, ChatDto chat);
 
-    List<LinkDto> findAllByChat(ChatDto chatDto);
+    Collection<LinkDto> findAllByChat(ChatDto chatDto);
 
     LinkDto getByUrl(String url);
 
@@ -24,5 +23,5 @@ public interface LinkRepository {
 
     void update(LinkDto link);
 
-    List<ChatDto> getChats(LinkDto link);
+    Collection<ChatDto> getChats(LinkDto link);
 }
