@@ -34,4 +34,19 @@ public class JooqLinkService implements LinkService {
     public Collection<LinkDto> listAll(long tgChatId) {
         return jooqLinkRepository.findAllByChat(new ChatDto(tgChatId, null));
     }
+
+    @Override
+    public Collection<LinkDto> getOlderThan(int minutes) {
+        return jooqLinkRepository.findOlderThan(minutes);
+    }
+
+    @Override
+    public void updateLink(LinkDto link) {
+        jooqLinkRepository.update(link);
+    }
+
+    @Override
+    public Collection<ChatDto> getChatsForLink(LinkDto link) {
+        return jooqLinkRepository.getChats(link);
+    }
 }
