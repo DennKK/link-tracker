@@ -1,8 +1,8 @@
 package edu.java.scrapper.domain.repository.jooq;
 
 import edu.java.scrapper.domain.dto.ChatDto;
-import java.util.List;
 import edu.java.scrapper.domain.repository.ChatRepository;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.jooq.DSLContext;
 import static edu.java.scrapper.domain.jooq_generated.Tables.CHATS;
