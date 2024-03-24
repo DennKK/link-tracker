@@ -1,4 +1,4 @@
 create table chats (
-    chat_id serial PRIMARY KEY,
+    chat_id bigserial PRIMARY KEY,
     registered_at timestamp with time zone not null
 );
