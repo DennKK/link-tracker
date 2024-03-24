@@ -10,12 +10,14 @@ import lombok.RequiredArgsConstructor;
 import org.jooq.DSLContext;
 import org.jooq.Record;
 import org.jooq.Result;
+import org.springframework.stereotype.Repository;
 import static edu.java.scrapper.domain.jooq_generated.Tables.CHATS;
 import static edu.java.scrapper.domain.jooq_generated.Tables.LINKS;
 import static edu.java.scrapper.domain.jooq_generated.Tables.LINKS_TO_CHATS;
 import static org.jooq.impl.DSL.field;
 import static org.jooq.impl.DSL.table;
 
+@Repository
 @RequiredArgsConstructor
 public class JooqLinkRepository implements LinkRepository {
     private final DSLContext dslContext;
