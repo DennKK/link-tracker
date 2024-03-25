@@ -7,6 +7,7 @@ import edu.java.scrapper.domain.dto.LinkDto;
 import java.time.OffsetDateTime;
 import java.util.Collection;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 
 @RequiredArgsConstructor
@@ -15,10 +16,8 @@ public class JdbcLinkUpdater implements LinkUpdater {
     private final GitHubClient gitHubClient;
     private final BotClient botClient;
 
-    // @Value("${app.scheduler.update-frequency}")
-    // Начинают падать тесты jdbc репозиториев если подтягивать значение из application.yaml
-    // Оставляю так, пока не разберусь как пофиксить
-    int updateFrequency = 10;
+    @Value("${app.update-frequency}")
+    private int updateFrequency;
 
     @Scheduled(fixedDelayString = "${app.scheduler.interval}")
     public void update() {
