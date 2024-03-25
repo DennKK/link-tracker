@@ -21,11 +21,11 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class LinkUpdaterScheduler implements LinkUpdater {
     private static final Logger LOGGER = Logger.getLogger(LinkUpdaterScheduler.class.getName());
-    private GitHubClient gitHubClient;
+    private final GitHubClient gitHubClient;
     @Value("${app.update-frequency}")
     private int updateFrequency;
-    private LinkService linkService;
-    private BotClient botClient;
+    private final LinkService linkService;
+    private final BotClient botClient;
 
     @Override
     @Scheduled(fixedDelayString = "${app.scheduler.interval}")
