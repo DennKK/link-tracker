@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
@@ -21,9 +22,8 @@ import org.springframework.stereotype.Component;
 public class LinkUpdaterScheduler implements LinkUpdater {
     private static final Logger LOGGER = Logger.getLogger(LinkUpdaterScheduler.class.getName());
     private GitHubClient gitHubClient;
-    // Падают jdbc тесты, если подтягивать значение из application.yaml. Временно оставляю так
-    // TODO: Refactor to use value from application.yaml
-    protected int updateFrequency = 10;
+    @Value("${app.update-frequency}")
+    private int updateFrequency;
     private LinkService linkService;
     private BotClient botClient;
 
