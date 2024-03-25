@@ -11,7 +11,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-@ConditionalOnProperty(prefix = "app", name = "database-access-type", havingValue = "jooq")
+@ConditionalOnProperty(prefix = "app", name = "access-type", havingValue = "jpa")
 public class JpaAccessConfiguration {
     @Bean
     public LinkService linkService(JpaLinkRepository linkRepository, JpaChatRepository chatRepository) {
