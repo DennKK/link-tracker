@@ -12,8 +12,6 @@ public record ApplicationConfig(
     @NotNull
     AccessType accessType,
     @NotNull
-    int updateFrequency,
-    @NotNull
     Scheduler scheduler
 ) {
     public record Scheduler(boolean enable, @NotNull Duration interval, @NotNull Duration forceCheckDelay) {
