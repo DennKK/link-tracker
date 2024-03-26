@@ -13,8 +13,6 @@ import org.springframework.stereotype.Repository;
 import static edu.java.scrapper.domain.jooq_generated.Tables.CHATS;
 import static edu.java.scrapper.domain.jooq_generated.Tables.LINKS;
 import static edu.java.scrapper.domain.jooq_generated.Tables.LINKS_TO_CHATS;
-import static org.jooq.impl.DSL.field;
-import static org.jooq.impl.DSL.table;
 
 @Repository
 @RequiredArgsConstructor
@@ -22,10 +20,24 @@ public class JooqLinkRepository implements LinkRepository {
     private final DSLContext dslContext;
 
     @Override
+    public Iterable<LinkDto> findAll() {
+        return dslContext.selectFrom(LINKS)
+            .fetchInto(LinkDto.class);
+    }
+
+    @Override
     public void add(LinkDto link) {
         dslContext.insertInto(LINKS)
             .set(LINKS.URL, link.getUrl())
-            .set(LINKS.UPDATED_AT, link.getUpdatedAt()).execute();
+            .set(LINKS.UPDATED_AT, link.getUpdatedAt())
+            .execute();
+    }
+
+    @Override
+    public int remove(LinkDto link) {
+        return dslContext.delete(LINKS)
+            .where(LINKS.LINK_ID.eq(link.getLinkId()))
+            .execute();
     }
 
     @Override
@@ -33,7 +45,8 @@ public class JooqLinkRepository implements LinkRepository {
         dslContext.update(LINKS)
             .set(LINKS.URL, link.getUrl())
             .set(LINKS.UPDATED_AT, link.getUpdatedAt())
-            .where(LINKS.LINK_ID.eq(link.getLinkId())).execute();
+            .where(LINKS.LINK_ID.eq(link.getLinkId()))
+            .execute();
 
     }
 
@@ -56,16 +69,11 @@ public class JooqLinkRepository implements LinkRepository {
     }
 
     @Override
-    public int remove(LinkDto link) {
-        return dslContext.delete(LINKS)
-            .where(LINKS.LINK_ID.eq(link.getLinkId())).execute();
-    }
-
-    @Override
     public void map(LinkDto link, ChatDto chat) {
         dslContext.insertInto(LINKS_TO_CHATS)
-            .set(LINKS.LINK_ID, link.getLinkId())
-            .set(CHATS.CHAT_ID, chat.getChatId()).execute();
+            .set(LINKS_TO_CHATS.LINK_ID, link.getLinkId())
+            .set(LINKS_TO_CHATS.CHAT_ID, chat.getChatId())
+            .execute();
     }
 
     @Override
@@ -78,20 +86,17 @@ public class JooqLinkRepository implements LinkRepository {
 
     @Override
     public Collection<LinkDto> findAllByChat(ChatDto chatDto) {
-        String linkIdFromLinks = "links.link_id";
-        String chatIdFromChat = "chats.chat_id";
-
         Result<Record> result = dslContext.select()
-            .from(table("links")
-                .join(table("links_to_chats")).on(field(linkIdFromLinks).eq(field("links_to_chats.link_id")))
-                .join(table("chats")).on(field("links_to_chats.chat_id").eq(field(chatIdFromChat))))
-            .where(field(chatIdFromChat).eq(chatDto.getChatId()))
+            .from(LINKS)
+            .join(LINKS_TO_CHATS).on(LINKS.LINK_ID.eq(LINKS_TO_CHATS.LINK_ID))
+            .join(CHATS).on(LINKS_TO_CHATS.CHAT_ID.eq(CHATS.CHAT_ID))
+            .where(CHATS.CHAT_ID.eq(chatDto.getChatId()))
             .fetch();
 
         return result.map(resultRecord -> {
-            Long linkId = resultRecord.get(linkIdFromLinks, Long.class);
-            String url = resultRecord.get("links.url", String.class);
-            OffsetDateTime updatedAt = resultRecord.get("links.updated_at", OffsetDateTime.class);
+            Long linkId = resultRecord.get(LINKS.LINK_ID);
+            String url = resultRecord.get(LINKS.URL);
+            OffsetDateTime updatedAt = resultRecord.get(LINKS.UPDATED_AT);
             return new LinkDto(linkId, url, updatedAt);
         });
     }
@@ -99,11 +104,7 @@ public class JooqLinkRepository implements LinkRepository {
     @Override
     public LinkDto getByUrl(String url) {
         return dslContext.selectFrom(LINKS)
-            .where(LINKS.URL.eq(url)).fetchOneInto(LinkDto.class);
-    }
-
-    @Override
-    public Iterable<LinkDto> findAll() {
-        return dslContext.selectFrom(LINKS).fetchInto(LinkDto.class);
+            .where(LINKS.URL.eq(url))
+            .fetchOneInto(LinkDto.class);
     }
 }
