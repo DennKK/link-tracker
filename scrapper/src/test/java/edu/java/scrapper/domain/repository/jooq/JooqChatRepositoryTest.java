@@ -38,4 +38,17 @@ public class JooqChatRepositoryTest extends IntegrationEnvironment {
             Assertions.assertTrue(Math.abs(difference) < 5); // Acceptable difference of less than 5 seconds
         }
     }
+
+    @Test
+    @Transactional
+    @Rollback
+    void removeTest() {
+        ChatDto chat = new ChatDto(
+            null,
+            OffsetDateTime.now()
+        );
+
+        chatRepository.add(chat);
+        Assertions.assertEquals(0, chatRepository.remove(chat));
+    }
 }
