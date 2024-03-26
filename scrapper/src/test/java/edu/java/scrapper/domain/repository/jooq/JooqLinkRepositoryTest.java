@@ -35,4 +35,17 @@ public class JooqLinkRepositoryTest extends IntegrationEnvironment {
             Assertions.assertEquals(links.get(i).getUrl(), linksFromDb.get(i).getUrl());
         }
     }
+
+    @Test
+    @Transactional
+    @Rollback
+    void removeTest() {
+        LinkDto link = new LinkDto(
+            null,
+            "stackoferflow.com",
+            OffsetDateTime.now()
+        );
+        linkRepository.add(link);
+        Assertions.assertEquals(0, linkRepository.remove(link));
+    }
 }
