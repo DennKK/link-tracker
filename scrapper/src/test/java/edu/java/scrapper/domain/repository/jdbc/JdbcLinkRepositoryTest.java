@@ -36,6 +36,7 @@ public class JdbcLinkRepositoryTest extends IntegrationEnvironment {
             long difference =
                 ChronoUnit.SECONDS.between(links.get(i).getUpdatedAt(), linksFromDB.get(i).getUpdatedAt());
             Assertions.assertTrue(Math.abs(difference) < 5); // Acceptable difference of less than 5 seconds
+            Assertions.assertEquals(links.get(i).getUrl(), linksFromDB.get(i).getUrl());
         }
     }
 
