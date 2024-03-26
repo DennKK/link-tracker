@@ -19,18 +19,21 @@ import lombok.Setter;
 @Entity
 @Getter
 @Setter
-@Table(name = "LINKS")
+@Table(name = "\"LINKS\"")
 @AllArgsConstructor
 @NoArgsConstructor
 public class LinkEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "LINK_ID")
+    @Column(name = "\"LINK_ID\"")
     private Long linkId;
-    @Column(name = "URL")
+
+    @Column(name = "\"URL\"")
     private String url;
-    @Column(name = "UPDATED_AT")
+
+    @Column(name = "\"UPDATED_AT\"")
     private OffsetDateTime updatedAt;
+
     @ManyToMany(mappedBy = "links", cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     private Set<ChatEntity> chats = new HashSet<>();
 }
