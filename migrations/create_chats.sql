@@ -1,4 +1,5 @@
-create table chats (
-    chat_id bigserial PRIMARY KEY,
-    registered_at timestamp with time zone not null
+CREATE TABLE "CHATS"
+(
+    "CHAT_ID"       bigserial PRIMARY KEY,
+    "REGISTERED_AT" timestamp with time zone not null
 );
