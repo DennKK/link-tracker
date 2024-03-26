@@ -27,9 +27,7 @@ public class JpaChatRepositoryTest extends IntegrationEnvironment {
         chats.add(new ChatEntity(null, OffsetDateTime.now(), new HashSet<>()));
         chats.add(new ChatEntity(null, OffsetDateTime.now(), new HashSet<>()));
 
-        for (ChatEntity chat : chats) {
-            chatRepository.save(chat);
-        }
+        chatRepository.saveAll(chats);
 
         List<ChatEntity> chatsFromDb = chatRepository.findAll();
         Assertions.assertEquals(chats.size(), chatsFromDb.size());
