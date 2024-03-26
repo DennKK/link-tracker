@@ -7,7 +7,6 @@ import lombok.RequiredArgsConstructor;
 import org.jooq.DSLContext;
 import org.springframework.stereotype.Repository;
 import static edu.java.scrapper.domain.jooq_generated.Tables.CHATS;
-import static edu.java.scrapper.domain.jooq_generated.Tables.LINKS;
 
 @Repository
 @RequiredArgsConstructor
@@ -22,12 +21,12 @@ public class JooqChatRepository implements ChatRepository {
 
     @Override
     public List<ChatDto> findAll() {
-        return dslContext.selectFrom(CHATS).fetchInto(ChatDto.class);
+        return dslContext.select().from(CHATS).fetchInto(ChatDto.class);
     }
 
     @Override
     public int remove(ChatDto chat) {
         return dslContext.delete(CHATS)
-            .where(LINKS.LINK_ID.eq(chat.getChatId())).execute();
+            .where(CHATS.CHAT_ID.eq(chat.getChatId())).execute();
     }
 }

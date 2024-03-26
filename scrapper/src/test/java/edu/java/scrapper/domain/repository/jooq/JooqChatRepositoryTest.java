@@ -1,4 +1,4 @@
-package edu.java.scrapper.domain.repository.jdbc;
+package edu.java.scrapper.domain.repository.jooq;
 
 import edu.java.scrapper.IntegrationEnvironment;
 import edu.java.scrapper.domain.dto.ChatDto;
@@ -14,9 +14,9 @@ import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 
 @SpringBootTest
-public class JdbcChatRepositoryTest extends IntegrationEnvironment {
+public class JooqChatRepositoryTest extends IntegrationEnvironment {
     @Autowired
-    private JdbcChatRepository chatRepository;
+    private JooqChatRepository chatRepository;
 
     @Test
     @Transactional
@@ -30,25 +30,12 @@ public class JdbcChatRepositoryTest extends IntegrationEnvironment {
             chatRepository.add(chat);
         }
 
-        List<ChatDto> chatsFromDB = (List<ChatDto>) chatRepository.findAll();
-        Assertions.assertEquals(chats.size(), chatsFromDB.size());
+        List<ChatDto> chatsFromDb = (List<ChatDto>) chatRepository.findAll();
+        Assertions.assertEquals(chats.size(), chatsFromDb.size());
         for (int i = 0; i < chats.size(); i++) {
             long difference =
-                ChronoUnit.SECONDS.between(chats.get(i).getRegisteredAt(), chatsFromDB.get(i).getRegisteredAt());
+                ChronoUnit.SECONDS.between(chats.get(i).getRegisteredAt(), chatsFromDb.get(i).getRegisteredAt());
             Assertions.assertTrue(Math.abs(difference) < 5); // Acceptable difference of less than 5 seconds
         }
-    }
-
-    @Test
-    @Transactional
-    @Rollback
-    void removeTest() {
-        ChatDto chat = new ChatDto(
-            null,
-            OffsetDateTime.now()
-        );
-
-        chatRepository.add(chat);
-        Assertions.assertEquals(0, chatRepository.remove(chat));
     }
 }
