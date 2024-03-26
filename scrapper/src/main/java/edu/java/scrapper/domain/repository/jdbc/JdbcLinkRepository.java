@@ -19,19 +19,19 @@ import org.springframework.transaction.annotation.Transactional;
 public class JdbcLinkRepository implements LinkRepository {
     private final NamedParameterJdbcTemplate jdbcTemplate;
     private final RowMapper<LinkDto> rowMapper = new DataClassRowMapper<>(LinkDto.class);
-    private final String linkIdString = "linkId";
-    private final String chatIdString = "chatId";
+    private final String linkIdTemplate = "LINK_ID";
+    private final String chatIdTemplate = "CHAT_ID";
 
     @Override
     public Iterable<LinkDto> findAll() {
-        return jdbcTemplate.query("select * from links", rowMapper);
+        return jdbcTemplate.query("SELECT * FROM \"LINKS\"", rowMapper);
     }
 
     @Override
     @Transactional
     public void add(LinkDto link) {
         jdbcTemplate.update(
-            "insert into links(url, updated_at) values(:url, :updatedAt)",
+            "INSERT INTO \"LINKS\"(\"URL\", \"UPDATED_AT\") VALUES(:url, :updatedAt)",
             new BeanPropertySqlParameterSource(link)
         );
     }
@@ -40,9 +40,8 @@ public class JdbcLinkRepository implements LinkRepository {
     @Transactional
     public int remove(LinkDto link) {
         return jdbcTemplate.update(
-            "delete from links where link_id = :linkId",
-            new MapSqlParameterSource()
-                .addValue(linkIdString, link.getLinkId())
+            "DELETE FROM \"LINKS\" WHERE \"LINK_ID\" = :LINK_ID",
+            new MapSqlParameterSource().addValue(linkIdTemplate, link.getLinkId())
         );
     }
 
@@ -50,10 +49,10 @@ public class JdbcLinkRepository implements LinkRepository {
     @Transactional
     public void map(LinkDto link, ChatDto chat) {
         jdbcTemplate.update(
-            "insert into links_to_chats(chat_id, link_id) values(:chatId, :linkId)",
+            "INSERT INTO \"LINKS_TO_CHATS\"(\"CHAT_ID\", \"LINK_ID\") VALUES(:CHAT_ID, :LINK_ID)",
             new MapSqlParameterSource()
-                .addValue(linkIdString, link.getLinkId())
-                .addValue(chatIdString, chat.getChatId())
+                .addValue(linkIdTemplate, link.getLinkId())
+                .addValue(chatIdTemplate, chat.getChatId())
         );
     }
 
@@ -61,10 +60,10 @@ public class JdbcLinkRepository implements LinkRepository {
     @Transactional
     public void unmap(Long linkId, Long chatId) {
         jdbcTemplate.update(
-            "delete from links_to_chats where link_id = :linkId and chat_id = :chatId",
+            "DELETE FROM \"LINKS_TO_CHATS\" WHERE \"LINK_ID\" = :LINK_ID AND \"CHAT_ID\" = :CHAT_ID",
             new MapSqlParameterSource()
-                .addValue(linkIdString, linkId)
-                .addValue(chatIdString, chatId)
+                .addValue(linkIdTemplate, linkId)
+                .addValue(chatIdTemplate, chatId)
         );
     }
 
@@ -72,11 +71,11 @@ public class JdbcLinkRepository implements LinkRepository {
     @Transactional
     public LinkDto getByUrl(String url) {
         List<LinkDto> links = jdbcTemplate.query(
-            "select * from links where link = :link",
-            new MapSqlParameterSource().addValue("link", url),
+            "SELECT * FROM \"LINKS\" WHERE \"URL\" = :url",
+            new MapSqlParameterSource().addValue("url", url),
             rowMapper
         );
-        return !links.isEmpty() ? links.getFirst() : null;
+        return !links.isEmpty() ? links.get(0) : null;
     }
 
     @Override
@@ -84,11 +83,11 @@ public class JdbcLinkRepository implements LinkRepository {
     public Collection<LinkDto> findAllByChat(ChatDto chat) {
         return jdbcTemplate.query(
             """
-                SELECT l.* FROM links_to_chats
-                JOIN links l ON l.link_id = links_to_chats.link_id
-                WHERE chat_id = :id
+                SELECT L.* FROM \"LINKS_TO_CHATS\" LT
+                JOIN \"LINKS\" L ON L.\"LINK_ID\" = LT.\"LINK_ID\"
+                WHERE LT.\"CHAT_ID\" = :CHAT_ID
                 """,
-            new BeanPropertySqlParameterSource(chat),
+            new MapSqlParameterSource().addValue(chatIdTemplate, chat.getChatId()),
             rowMapper
         );
     }
@@ -96,10 +95,19 @@ public class JdbcLinkRepository implements LinkRepository {
     @Override
     public Collection<LinkDto> findOlderThan(int minutes) {
         return jdbcTemplate.query(
-            "select *, now() - updatedAt from links where (now() - updatedAt) > (:interval * interval '1 minute')",
-            new MapSqlParameterSource()
-                .addValue("interval", minutes),
+            "SELECT * FROM \"LINKS\" WHERE (NOW() - \"UPDATED_AT\") > (:interval * INTERVAL '1 minute')",
+            new MapSqlParameterSource().addValue("interval", minutes),
             rowMapper
+        );
+    }
+
+    @Override
+    public void update(LinkDto link) {
+        jdbcTemplate.update(
+            "UPDATE \"LINKS\" SET \"UPDATED_AT\" = :updatedAt WHERE \"LINK_ID\" = :LINK_ID",
+            new MapSqlParameterSource()
+                .addValue("updatedAt", link.getUpdatedAt())
+                .addValue(linkIdTemplate, link.getLinkId())
         );
     }
 
@@ -107,19 +115,11 @@ public class JdbcLinkRepository implements LinkRepository {
     @Transactional
     public Collection<ChatDto> getChats(LinkDto link) {
         return jdbcTemplate.query(
-            "select * from chats where chat_id in (select chat_id from links_to_chats where link_id = :linkId)",
-            new BeanPropertySqlParameterSource(link),
+            "SELECT * FROM \"CHATS\" "
+                + "WHERE \"CHAT_ID\" IN "
+                + "(SELECT \"CHAT_ID\" FROM \"LINKS_TO_CHATS\" WHERE \"LINK_ID\" = :LINK_ID)",
+            new MapSqlParameterSource().addValue(linkIdTemplate, link.getLinkId()),
             new DataClassRowMapper<>(ChatDto.class)
-        );
-    }
-
-    @Override
-    public void update(LinkDto link) {
-        jdbcTemplate.update(
-            "update links set updated_at = :updatedAt where link_id = :linkId",
-            new MapSqlParameterSource()
-                .addValue("updatedAt", link.getUpdatedAt())
-                .addValue(linkIdString, link.getLinkId())
         );
     }
 }

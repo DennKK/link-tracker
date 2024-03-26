@@ -19,14 +19,14 @@ public class JdbcChatRepository implements ChatRepository {
 
     @Override
     public Iterable<ChatDto> findAll() {
-        return jdbcTemplate.query("select * from chats", rowMapper);
+        return jdbcTemplate.query("SELECT * FROM \"CHATS\"", rowMapper);
     }
 
     @Override
     @Transactional
     public void add(ChatDto chat) {
         jdbcTemplate.update(
-            "insert into chats(registered_at) values(:registeredAt)",
+            "INSERT INTO \"CHATS\"(\"REGISTERED_AT\") VALUES(:registeredAt)",
             new BeanPropertySqlParameterSource(chat)
         );
     }
@@ -35,9 +35,8 @@ public class JdbcChatRepository implements ChatRepository {
     @Transactional
     public int remove(ChatDto chat) {
         return jdbcTemplate.update(
-            "delete from chats where chat_id = :chatId",
-            new MapSqlParameterSource()
-                .addValue("chatId", chat.getChatId())
+            "DELETE FROM \"CHATS\" WHERE \"CHAT_ID\" = :chatId",
+            new MapSqlParameterSource().addValue("chatId", chat.getChatId())
         );
     }
 }
