@@ -13,3 +13,5 @@ public class BotApplication {
         context.getBean(ListenerBot.class).start();
     }
 }
+
+// ТЕСТОВЫЙ КОММИТ
