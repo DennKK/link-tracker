@@ -45,11 +45,25 @@ public class LinkUpdaterScheduler implements LinkUpdater {
         }
     }
 
-    // TODO: Create url parser
-    // В предыдущих заданиях нигде не было необходимости парсить ссылки
-    // Хотелось бы отличать ссылку на stackoverflow и github друга от друга и от других ссылок
-    // Распарсиватель ссылок пока не готов, поэтому оставляю заглушку
+    // TODO: Move the parser into a separate module
+    // Временная функция для парсинг url
+    private String[] parseGithubLink(String url) throws RuntimeException {
+        String linkNotFoundTemplate = "Link does not match format %s {username}/{reponame}";
+        String expectedPrefix = "https://github.com/";
+        if (!url.startsWith(expectedPrefix)) {
+            throw new RuntimeException(String.format(linkNotFoundTemplate, expectedPrefix));
+        }
+
+        String[] parts = url.substring(expectedPrefix.length()).split("/");
+        if (parts.length != 2 || parts[0].isEmpty() || parts[1].isEmpty()) {
+            throw new RuntimeException(String.format(linkNotFoundTemplate, expectedPrefix));
+        }
+
+        return new String[] {parts[0], parts[1]};
+    }
+
     private OffsetDateTime getLastUpdateTime(LinkDto link) {
-        return OffsetDateTime.parse(gitHubClient.getGitHubResponse("DennKK", "link-tracker").updatedAt());
+        String[] parsedLink = parseGithubLink(link.getUrl());
+        return OffsetDateTime.parse(gitHubClient.getGitHubResponse(parsedLink[0], parsedLink[1]).updatedAt());
     }
 }
