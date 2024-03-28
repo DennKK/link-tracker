@@ -16,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class JdbcChatRepository implements ChatRepository {
     private final NamedParameterJdbcTemplate jdbcTemplate;
     private final RowMapper<ChatDto> rowMapper = new DataClassRowMapper<>(ChatDto.class);
+    private final String tgChatIdTemplate = "tgChatId";
 
     @Override
     public Iterable<ChatDto> findAll() {
@@ -26,7 +27,7 @@ public class JdbcChatRepository implements ChatRepository {
     @Transactional
     public void add(ChatDto chat) {
         jdbcTemplate.update(
-            "INSERT INTO chats(registered_at) VALUES(:registeredAt)",
+            "INSERT INTO chats(tg_chat_id, registered_at) VALUES(:tgChatId, :registeredAt)",
             new BeanPropertySqlParameterSource(chat)
         );
     }
@@ -35,8 +36,18 @@ public class JdbcChatRepository implements ChatRepository {
     @Transactional
     public int remove(ChatDto chat) {
         return jdbcTemplate.update(
-            "DELETE FROM chats WHERE chat_id = :chatId",
-            new MapSqlParameterSource().addValue("chatId", chat.getChatId())
+            "DELETE FROM chats WHERE tg_chat_id = :tgChatId",
+            new MapSqlParameterSource().addValue(tgChatIdTemplate, chat.getTgChatId())
+        );
+    }
+
+    @Override
+    @Transactional
+    public ChatDto findByTgChatId(Long tgChatId) {
+        return jdbcTemplate.queryForObject(
+            "SELECT * FROM chats WHERE tg_chat_id = :tgChatId",
+            new MapSqlParameterSource().addValue(tgChatIdTemplate, tgChatId),
+            rowMapper
         );
     }
 }
