@@ -2,6 +2,7 @@ package edu.java.scrapper.domain.repository.jooq;
 
 import edu.java.scrapper.IntegrationEnvironment;
 import edu.java.scrapper.domain.dto.LinkDto;
+import edu.java.scrapper.domain.repository.jooq.config.JooqTestConfig;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -9,10 +10,12 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.Import;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 
 @SpringBootTest
+@Import(JooqTestConfig.class)
 public class JooqLinkRepositoryTest extends IntegrationEnvironment {
     @Autowired
     private JooqLinkRepository linkRepository;

@@ -2,6 +2,7 @@ package edu.java.scrapper.domain.repository.jooq;
 
 import edu.java.scrapper.IntegrationEnvironment;
 import edu.java.scrapper.domain.dto.ChatDto;
+import edu.java.scrapper.domain.repository.jooq.config.JooqTestConfig;
 import java.time.OffsetDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
@@ -10,10 +11,12 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.Import;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 
 @SpringBootTest
+@Import(JooqTestConfig.class)
 public class JooqChatRepositoryTest extends IntegrationEnvironment {
     @Autowired
     private JooqChatRepository chatRepository;
