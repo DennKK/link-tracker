@@ -47,12 +47,12 @@ public class JdbcLinkRepository implements LinkRepository {
 
     @Override
     @Transactional
-    public void map(LinkDto link, ChatDto chat) {
+    public void map(Long linkId, Long chatId) {
         jdbcTemplate.update(
             "INSERT INTO links_to_chats(chat_id, link_id) VALUES(:chat_id, :link_id)",
             new MapSqlParameterSource()
-                .addValue(linkIdTemplate, link.getLinkId())
-                .addValue(chatIdTemplate, chat.getChatId())
+                .addValue(linkIdTemplate, linkId)
+                .addValue(chatIdTemplate, chatId)
         );
     }
 
