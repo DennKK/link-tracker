@@ -11,7 +11,7 @@ public interface LinkRepository {
 
     int remove(LinkDto link);
 
-    void map(LinkDto link, ChatDto chat);
+    void map(Long linkId, Long chatId);
 
     void unmap(Long linkId, Long chatId);
 
