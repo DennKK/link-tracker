@@ -6,6 +6,7 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.jooq.DSLContext;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 import static edu.java.scrapper.domain.jooq_generated.Tables.CHATS;
 
 @Repository
@@ -14,19 +15,33 @@ public class JooqChatRepository implements ChatRepository {
     private final DSLContext dslContext;
 
     @Override
+    @Transactional
     public void add(ChatDto chat) {
         dslContext.insertInto(CHATS)
-            .set(CHATS.REGISTERED_AT, chat.getRegisteredAt()).execute();
+            .set(CHATS.TG_CHAT_ID, chat.getTgChatId())
+            .set(CHATS.REGISTERED_AT, chat.getRegisteredAt())
+            .execute();
     }
 
     @Override
+    @Transactional
     public List<ChatDto> findAll() {
         return dslContext.select().from(CHATS).fetchInto(ChatDto.class);
     }
 
     @Override
+    @Transactional
     public int remove(ChatDto chat) {
         return dslContext.delete(CHATS)
-            .where(CHATS.CHAT_ID.eq(chat.getChatId())).execute();
+            .where(CHATS.TG_CHAT_ID.eq(chat.getTgChatId())).execute();
+    }
+
+    @Override
+    @Transactional
+    public ChatDto findByTgChatId(Long tgChatId) {
+        return dslContext
+            .selectFrom(CHATS)
+            .where(CHATS.TG_CHAT_ID.eq(tgChatId))
+            .fetchOneInto(ChatDto.class);
     }
 }
