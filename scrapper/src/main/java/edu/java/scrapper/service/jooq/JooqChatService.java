@@ -12,11 +12,11 @@ public class JooqChatService implements ChatService {
 
     @Override
     public void register(long tgChatId) {
-        jooqChatRepository.add(new ChatDto(tgChatId, OffsetDateTime.now()));
+        jooqChatRepository.add(new ChatDto(null, tgChatId, OffsetDateTime.now()));
     }
 
     @Override
     public void unregister(long tgChatId) {
-        jooqChatRepository.remove(new ChatDto(tgChatId, null));
+        jooqChatRepository.remove(new ChatDto(null, tgChatId, null));
     }
 }

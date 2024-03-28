@@ -8,4 +8,6 @@ public interface ChatRepository {
     Iterable<ChatDto> findAll();
 
     int remove(ChatDto chat);
+
+    ChatDto findByTgChatId(Long tgChatId);
 }

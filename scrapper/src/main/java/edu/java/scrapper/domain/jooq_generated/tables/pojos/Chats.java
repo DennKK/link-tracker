@@ -11,6 +11,7 @@ import java.time.OffsetDateTime;
 import javax.annotation.processing.Generated;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 
 /**
@@ -29,21 +30,25 @@ public class Chats implements Serializable {
     private static final long serialVersionUID = 1L;
 
     private Long chatId;
+    private Long tgChatId;
     private OffsetDateTime registeredAt;
 
     public Chats() {}
 
     public Chats(Chats value) {
         this.chatId = value.chatId;
+        this.tgChatId = value.tgChatId;
         this.registeredAt = value.registeredAt;
     }
 
-    @ConstructorProperties({ "chatId", "registeredAt" })
+    @ConstructorProperties({ "chatId", "tgChatId", "registeredAt" })
     public Chats(
         @NotNull Long chatId,
+        @Nullable Long tgChatId,
         @NotNull OffsetDateTime registeredAt
     ) {
         this.chatId = chatId;
+        this.tgChatId = tgChatId;
         this.registeredAt = registeredAt;
     }
 
@@ -60,6 +65,21 @@ public class Chats implements Serializable {
      */
     public void setChatId(@NotNull Long chatId) {
         this.chatId = chatId;
+    }
+
+    /**
+     * Getter for <code>CHATS.TG_CHAT_ID</code>.
+     */
+    @Nullable
+    public Long getTgChatId() {
+        return this.tgChatId;
+    }
+
+    /**
+     * Setter for <code>CHATS.TG_CHAT_ID</code>.
+     */
+    public void setTgChatId(@Nullable Long tgChatId) {
+        this.tgChatId = tgChatId;
     }
 
     /**
@@ -93,6 +113,12 @@ public class Chats implements Serializable {
         }
         else if (!this.chatId.equals(other.chatId))
             return false;
+        if (this.tgChatId == null) {
+            if (other.tgChatId != null)
+                return false;
+        }
+        else if (!this.tgChatId.equals(other.tgChatId))
+            return false;
         if (this.registeredAt == null) {
             if (other.registeredAt != null)
                 return false;
@@ -107,6 +133,7 @@ public class Chats implements Serializable {
         final int prime = 31;
         int result = 1;
         result = prime * result + ((this.chatId == null) ? 0 : this.chatId.hashCode());
+        result = prime * result + ((this.tgChatId == null) ? 0 : this.tgChatId.hashCode());
         result = prime * result + ((this.registeredAt == null) ? 0 : this.registeredAt.hashCode());
         return result;
     }
@@ -116,6 +143,7 @@ public class Chats implements Serializable {
         StringBuilder sb = new StringBuilder("Chats (");
 
         sb.append(chatId);
+        sb.append(", ").append(tgChatId);
         sb.append(", ").append(registeredAt);
 
         sb.append(")");

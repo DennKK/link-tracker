@@ -1,6 +1,6 @@
-CREATE TABLE "LINKS"
+CREATE TABLE links
 (
-    "LINK_ID"    bigserial PRIMARY KEY,
-    "URL"        varchar(255)             not null,
-    "UPDATED_AT" timestamp with time zone not null
+    link_id    bigserial PRIMARY KEY,
+    url        varchar(255)             not null,
+    updated_at timestamp with time zone not null
 );

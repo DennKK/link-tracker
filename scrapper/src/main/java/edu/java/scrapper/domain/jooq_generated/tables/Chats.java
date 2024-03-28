@@ -16,12 +16,12 @@ import javax.annotation.processing.Generated;
 import org.jetbrains.annotations.NotNull;
 import org.jooq.Field;
 import org.jooq.ForeignKey;
-import org.jooq.Function2;
+import org.jooq.Function3;
 import org.jooq.Identity;
 import org.jooq.Name;
 import org.jooq.Record;
 import org.jooq.Records;
-import org.jooq.Row2;
+import org.jooq.Row3;
 import org.jooq.Schema;
 import org.jooq.SelectField;
 import org.jooq.Table;
@@ -66,6 +66,11 @@ public class Chats extends TableImpl<ChatsRecord> {
      * The column <code>CHATS.CHAT_ID</code>.
      */
     public final TableField<ChatsRecord, Long> CHAT_ID = createField(DSL.name("CHAT_ID"), SQLDataType.BIGINT.nullable(false).identity(true), this, "");
+
+    /**
+     * The column <code>CHATS.TG_CHAT_ID</code>.
+     */
+    public final TableField<ChatsRecord, Long> TG_CHAT_ID = createField(DSL.name("TG_CHAT_ID"), SQLDataType.BIGINT, this, "");
 
     /**
      * The column <code>CHATS.REGISTERED_AT</code>.
@@ -169,19 +174,19 @@ public class Chats extends TableImpl<ChatsRecord> {
     }
 
     // -------------------------------------------------------------------------
-    // Row2 type methods
+    // Row3 type methods
     // -------------------------------------------------------------------------
 
     @Override
     @NotNull
-    public Row2<Long, OffsetDateTime> fieldsRow() {
-        return (Row2) super.fieldsRow();
+    public Row3<Long, Long, OffsetDateTime> fieldsRow() {
+        return (Row3) super.fieldsRow();
     }
 
     /**
      * Convenience mapping calling {@link SelectField#convertFrom(Function)}.
      */
-    public <U> SelectField<U> mapping(Function2<? super Long, ? super OffsetDateTime, ? extends U> from) {
+    public <U> SelectField<U> mapping(Function3<? super Long, ? super Long, ? super OffsetDateTime, ? extends U> from) {
         return convertFrom(Records.mapping(from));
     }
 
@@ -189,7 +194,7 @@ public class Chats extends TableImpl<ChatsRecord> {
      * Convenience mapping calling {@link SelectField#convertFrom(Class,
      * Function)}.
      */
-    public <U> SelectField<U> mapping(Class<U> toType, Function2<? super Long, ? super OffsetDateTime, ? extends U> from) {
+    public <U> SelectField<U> mapping(Class<U> toType, Function3<? super Long, ? super Long, ? super OffsetDateTime, ? extends U> from) {
         return convertFrom(toType, Records.mapping(from));
     }
 }

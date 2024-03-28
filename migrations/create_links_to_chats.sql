@@ -1,8 +1,8 @@
-CREATE TABLE "LINKS_TO_CHATS"
+CREATE TABLE links_to_chats
 (
-    "CHAT_ID" bigint not null,
-    "LINK_ID" bigint not null,
-    primary key ("CHAT_ID", "LINK_ID"),
-    foreign key ("CHAT_ID") references "CHATS" ("CHAT_ID"),
-    foreign key ("LINK_ID") references "LINKS" ("LINK_ID")
+    chat_id bigint not null,
+    link_id bigint not null,
+    primary key (chat_id, link_id),
+    foreign key (chat_id) references chats (chat_id),
+    foreign key (link_id) references links (link_id)
 );

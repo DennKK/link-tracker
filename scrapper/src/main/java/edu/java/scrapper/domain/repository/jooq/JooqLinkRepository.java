@@ -41,6 +41,22 @@ public class JooqLinkRepository implements LinkRepository {
     }
 
     @Override
+    public void map(Long linkId, Long chatId) {
+        dslContext.insertInto(LINKS_TO_CHATS)
+            .set(LINKS_TO_CHATS.LINK_ID, linkId)
+            .set(LINKS_TO_CHATS.CHAT_ID, chatId)
+            .execute();
+    }
+
+    @Override
+    public void unmap(Long linkId, Long chatId) {
+        dslContext.delete(LINKS_TO_CHATS)
+            .where(LINKS_TO_CHATS.LINK_ID.eq(linkId))
+            .and(LINKS_TO_CHATS.CHAT_ID.eq(chatId))
+            .execute();
+    }
+
+    @Override
     public void update(LinkDto link) {
         dslContext.update(LINKS)
             .set(LINKS.URL, link.getUrl())
@@ -66,22 +82,6 @@ public class JooqLinkRepository implements LinkRepository {
         return dslContext.selectFrom(LINKS)
             .where(LINKS.UPDATED_AT.lessThan(thresholdTime))
             .fetchInto(LinkDto.class);
-    }
-
-    @Override
-    public void map(LinkDto link, ChatDto chat) {
-        dslContext.insertInto(LINKS_TO_CHATS)
-            .set(LINKS_TO_CHATS.LINK_ID, link.getLinkId())
-            .set(LINKS_TO_CHATS.CHAT_ID, chat.getChatId())
-            .execute();
-    }
-
-    @Override
-    public void unmap(Long linkId, Long chatId) {
-        dslContext.delete(LINKS_TO_CHATS)
-            .where(LINKS_TO_CHATS.LINK_ID.eq(linkId))
-            .and(LINKS_TO_CHATS.CHAT_ID.eq(chatId))
-            .execute();
     }
 
     @Override

@@ -52,4 +52,20 @@ public class JdbcLinkRepositoryTest extends IntegrationEnvironment {
         linkRepository.add(link);
         Assertions.assertEquals(0, linkRepository.remove(link));
     }
+
+    @Test
+    @Rollback
+    @Transactional
+    void isIdExistsTest() {
+        String url = "stackoferflow.com";
+        LinkDto link = new LinkDto(
+            null,
+            url,
+            OffsetDateTime.now()
+        );
+        linkRepository.add(link);
+        LinkDto linkFromDb = linkRepository.getByUrl(url);
+        Assertions.assertNotNull(linkFromDb.getLinkId(), "LinkId should not be null");
+        Assertions.assertTrue(linkFromDb.getLinkId() > 0, "LinkId should be positive");
+    }
 }
