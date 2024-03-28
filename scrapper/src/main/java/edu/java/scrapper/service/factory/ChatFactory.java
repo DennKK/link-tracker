@@ -9,6 +9,7 @@ public class ChatFactory {
     public static ChatDto entityToDto(ChatEntity chatEntity) {
         ChatDto chatDto = new ChatDto();
         chatDto.setChatId(chatEntity.getChatId());
+        chatDto.setTgChatId(chatEntity.getTgChatId());
         chatDto.setRegisteredAt(chatEntity.getRegisteredAt());
         return chatDto;
     }
