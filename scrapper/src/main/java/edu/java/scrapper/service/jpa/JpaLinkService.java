@@ -32,7 +32,6 @@ public class JpaLinkService implements LinkService {
         chat.getLinks().add(link);
         link.getChats().add(chat);
         jpaChatRepository.save(chat);
-        jpaLinkRepository.save(link);
 
         return LinkFactory.entityToDto(link);
     }
