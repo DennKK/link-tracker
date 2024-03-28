@@ -14,8 +14,8 @@ import org.springframework.context.annotation.Configuration;
 @ConditionalOnProperty(prefix = "app", name = "access-type", havingValue = "jdbc")
 public class JdbcAccessConfiguration {
     @Bean
-    public LinkService linkService(JdbcLinkRepository linkRepository) {
-        return new JdbcLinkService(linkRepository);
+    public LinkService linkService(JdbcLinkRepository linkRepository, JdbcChatRepository chatRepository) {
+        return new JdbcLinkService(linkRepository, chatRepository);
     }
 
     @Bean

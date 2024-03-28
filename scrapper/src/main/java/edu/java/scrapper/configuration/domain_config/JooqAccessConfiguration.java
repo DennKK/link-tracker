@@ -14,8 +14,8 @@ import org.springframework.context.annotation.Configuration;
 @ConditionalOnProperty(prefix = "app", name = "access-type", havingValue = "jooq")
 public class JooqAccessConfiguration {
     @Bean
-    public LinkService linkService(JooqLinkRepository linkRepository) {
-        return new JooqLinkService(linkRepository);
+    public LinkService linkService(JooqLinkRepository linkRepository, JooqChatRepository chatRepository) {
+        return new JooqLinkService(linkRepository, chatRepository);
     }
 
     @Bean
