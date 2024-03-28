@@ -20,8 +20,8 @@ public class JpaChatService implements ChatService {
 
     @Override
     public void unregister(long tgChatId) {
-        ChatEntity chat = new ChatEntity();
-        chat.setChatId(tgChatId);
+        ChatEntity chat =
+            jpaChatRepository.findByTgChatId(tgChatId).orElseThrow(() -> new RuntimeException("Chat not found!"));
         jpaChatRepository.delete(chat);
     }
 }
