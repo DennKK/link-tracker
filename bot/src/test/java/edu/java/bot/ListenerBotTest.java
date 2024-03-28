@@ -19,7 +19,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 public class ListenerBotTest {
     @Test
     public void unknownCommandTest() {
-        MessageProcessor messageProcessor = new MessageProcessor(List.of(new StartCommand()));
+        MessageProcessor messageProcessor = new MessageProcessor(List.of(new StartCommand(null)));
         ListenerBot listenerBot = new ListenerBot(null, messageProcessor);
         String testCommand = "/someCommand";
 
@@ -33,7 +33,7 @@ public class ListenerBotTest {
 
     @Test
     public void listCommandTest() {
-        MessageProcessor messageProcessor = new MessageProcessor(List.of(new ListCommand()));
+        MessageProcessor messageProcessor = new MessageProcessor(List.of(new ListCommand(null)));
         ListenerBot listenerBot = new ListenerBot(null, messageProcessor);
         String testCommand = "/list";
 
@@ -47,10 +47,10 @@ public class ListenerBotTest {
     public void helpCommandTest() {
         List<Command> commands =
             List.of(
-                new StartCommand(),
+                new StartCommand(null),
                 new UntrackCommand(),
                 new HelpCommand(List.of(
-                    new StartCommand(),
+                    new StartCommand(null),
                     new UntrackCommand()
                 ))
             );
@@ -61,9 +61,9 @@ public class ListenerBotTest {
         String testCommand = "/help";
 
         String expectedResult = """
-                /start : starts interacting with the bot
-                /untrack : stops tracking link
-                /help : shows available commands""";
+            /start : starts interacting with the bot
+            /untrack : stops tracking link
+            /help : shows available commands""";
 
         Update update = BotUtils.parseUpdate("{\"message\":{\"text\":\"" + testCommand + "\",\"chat\":{\"id\":0}}}");
 
