@@ -2,7 +2,7 @@ package edu.java.scrapper.domain.repository.jooq;
 
 import edu.java.scrapper.IntegrationEnvironment;
 import edu.java.scrapper.domain.dto.LinkDto;
-import edu.java.scrapper.domain.repository.jooq.config.JooqTestConfig;
+import edu.java.scrapper.domain.repository.jooq.config.JooqConfig;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -15,7 +15,7 @@ import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 
 @SpringBootTest
-@Import(JooqTestConfig.class)
+@Import(JooqConfig.class)
 public class JooqLinkRepositoryTest extends IntegrationEnvironment {
     @Autowired
     private JooqLinkRepository linkRepository;
@@ -50,5 +50,21 @@ public class JooqLinkRepositoryTest extends IntegrationEnvironment {
         );
         linkRepository.add(link);
         Assertions.assertEquals(0, linkRepository.remove(link));
+    }
+
+    @Test
+    @Rollback
+    @Transactional
+    void isIdExistsTest() {
+        String url = "stackoferflow.com";
+        LinkDto link = new LinkDto(
+            null,
+            url,
+            OffsetDateTime.now()
+        );
+        linkRepository.add(link);
+        LinkDto linkFromDb = linkRepository.getByUrl(url);
+        Assertions.assertNotNull(linkFromDb.getLinkId(), "LinkId should not be null");
+        Assertions.assertTrue(linkFromDb.getLinkId() > 0, "LinkId should be positive");
     }
 }

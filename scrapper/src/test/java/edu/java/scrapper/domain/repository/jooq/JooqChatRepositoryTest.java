@@ -2,7 +2,7 @@ package edu.java.scrapper.domain.repository.jooq;
 
 import edu.java.scrapper.IntegrationEnvironment;
 import edu.java.scrapper.domain.dto.ChatDto;
-import edu.java.scrapper.domain.repository.jooq.config.JooqTestConfig;
+import edu.java.scrapper.domain.repository.jooq.config.JooqConfig;
 import java.time.OffsetDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
@@ -16,7 +16,7 @@ import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 
 @SpringBootTest
-@Import(JooqTestConfig.class)
+@Import(JooqConfig.class)
 public class JooqChatRepositoryTest extends IntegrationEnvironment {
     @Autowired
     private JooqChatRepository chatRepository;
@@ -40,5 +40,20 @@ public class JooqChatRepositoryTest extends IntegrationEnvironment {
                 ChronoUnit.SECONDS.between(chats.get(i).getRegisteredAt(), chatsFromDb.get(i).getRegisteredAt());
             Assertions.assertTrue(Math.abs(difference) < 5); // Acceptable difference of less than 5 seconds
         }
+    }
+
+    @Test
+    @Rollback
+    @Transactional
+    void isIdExistsTest() {
+        String url = "stackoferflow.com";
+        ChatDto chat = new ChatDto(
+            null,
+            OffsetDateTime.now()
+        );
+        chatRepository.add(chat);
+        List<ChatDto> chatFromDb = (List<ChatDto>) chatRepository.findAll();
+        Assertions.assertNotNull(chatFromDb.get(0).getChatId(), "LinkId should not be null");
+        Assertions.assertTrue(chatFromDb.get(0).getChatId() > 0, "LinkId should be positive");
     }
 }

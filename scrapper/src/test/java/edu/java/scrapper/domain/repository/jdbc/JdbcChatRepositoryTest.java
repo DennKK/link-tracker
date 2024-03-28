@@ -51,4 +51,19 @@ public class JdbcChatRepositoryTest extends IntegrationEnvironment {
         chatRepository.add(chat);
         Assertions.assertEquals(0, chatRepository.remove(chat));
     }
+
+    @Test
+    @Rollback
+    @Transactional
+    void isIdExistsTest() {
+        String url = "stackoferflow.com";
+        ChatDto chat = new ChatDto(
+            null,
+            OffsetDateTime.now()
+        );
+        chatRepository.add(chat);
+        List<ChatDto> chatFromDb = (List<ChatDto>) chatRepository.findAll();
+        Assertions.assertNotNull(chatFromDb.get(0).getChatId(), "LinkId should not be null");
+        Assertions.assertTrue(chatFromDb.get(0).getChatId() > 0, "LinkId should be positive");
+    }
 }
