@@ -75,7 +75,7 @@ public class JdbcLinkRepository implements LinkRepository {
             new MapSqlParameterSource().addValue("url", url),
             rowMapper
         );
-        return links.isEmpty() ? null : links.get(0);
+        return links.isEmpty() ? null : links.getFirst();
     }
 
     @Override
