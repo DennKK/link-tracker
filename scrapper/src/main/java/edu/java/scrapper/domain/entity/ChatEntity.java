@@ -30,7 +30,7 @@ public class ChatEntity {
     @Column(name = "chat_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long chatId;
-    @Column(name = "tg_cha_id")
+    @Column(name = "tg_chat_id")
     private Long tgChatId;
     @Column(name = "registered_at")
     private OffsetDateTime registeredAt;
