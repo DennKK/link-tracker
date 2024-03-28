@@ -14,12 +14,12 @@ public class JdbcChatService implements ChatService {
 
     @Override
     public void register(long tgChatId) {
-        ChatDto chat = new ChatDto(tgChatId, OffsetDateTime.now());
+        ChatDto chat = new ChatDto(null, tgChatId, OffsetDateTime.now());
         jdbcChatRepository.add(chat);
     }
 
     @Override
     public void unregister(long tgChatId) {
-        jdbcChatRepository.remove(new ChatDto(tgChatId, null));
+        jdbcChatRepository.remove(new ChatDto(null, tgChatId, null));
     }
 }
