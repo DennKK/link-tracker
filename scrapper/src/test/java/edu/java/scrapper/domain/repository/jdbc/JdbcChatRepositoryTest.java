@@ -23,8 +23,8 @@ public class JdbcChatRepositoryTest extends IntegrationEnvironment {
     @Rollback
     public void findAndAddTest() {
         List<ChatDto> chats = new ArrayList<>();
-        chats.add(new ChatDto(null, OffsetDateTime.now()));
-        chats.add(new ChatDto(null, OffsetDateTime.now()));
+        chats.add(new ChatDto(null, 1L, OffsetDateTime.now()));
+        chats.add(new ChatDto(null, 2L, OffsetDateTime.now()));
 
         for (ChatDto chat : chats) {
             chatRepository.add(chat);
@@ -45,25 +45,31 @@ public class JdbcChatRepositoryTest extends IntegrationEnvironment {
     void removeTest() {
         ChatDto chat = new ChatDto(
             null,
+            1L,
             OffsetDateTime.now()
         );
 
         chatRepository.add(chat);
-        Assertions.assertEquals(0, chatRepository.remove(chat));
+        List<ChatDto> chats = (List<ChatDto>) chatRepository.findAll();
+        Assertions.assertEquals(1, chats.size());
+
+        chatRepository.remove(chat);
+        chats = (List<ChatDto>) chatRepository.findAll();
+        Assertions.assertEquals(0, chats.size());
     }
 
     @Test
     @Rollback
     @Transactional
     void isIdExistsTest() {
-        String url = "stackoferflow.com";
         ChatDto chat = new ChatDto(
             null,
+            1L,
             OffsetDateTime.now()
         );
         chatRepository.add(chat);
         List<ChatDto> chatFromDb = (List<ChatDto>) chatRepository.findAll();
-        Assertions.assertNotNull(chatFromDb.get(0).getChatId(), "LinkId should not be null");
-        Assertions.assertTrue(chatFromDb.get(0).getChatId() > 0, "LinkId should be positive");
+        Assertions.assertNotNull(chatFromDb.getFirst().getChatId(), "LinkId should not be null");
+        Assertions.assertTrue(chatFromDb.getFirst().getChatId() > 0, "LinkId should be positive");
     }
 }
