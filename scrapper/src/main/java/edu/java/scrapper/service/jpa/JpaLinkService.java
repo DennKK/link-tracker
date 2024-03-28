@@ -26,7 +26,7 @@ public class JpaLinkService implements LinkService {
     @Override
     public LinkDto add(long tgChatId, URI url) {
         LinkEntity link = jpaLinkRepository.findByUrl(url.toString()).orElse(LinkFactory.createLinkEntity(url));
-        ChatEntity chat = jpaChatRepository.findById(tgChatId)
+        ChatEntity chat = jpaChatRepository.findByTgChatId(tgChatId)
             .orElseThrow(() -> new RuntimeException(String.format(CHAT_NOT_FOUND_TEMPLATE, tgChatId)));
 
         chat.getLinks().add(link);
@@ -39,20 +39,19 @@ public class JpaLinkService implements LinkService {
     @Override
     public LinkDto remove(long tgChatId, URI url) {
         LinkEntity link = jpaLinkRepository.findByUrl(url.toString()).orElse(LinkFactory.createLinkEntity(url));
-        ChatEntity chat = jpaChatRepository.findById(tgChatId)
+        ChatEntity chat = jpaChatRepository.findByTgChatId(tgChatId)
             .orElseThrow(() -> new RuntimeException(String.format(CHAT_NOT_FOUND_TEMPLATE, tgChatId)));
 
         chat.getLinks().remove(link);
         link.getChats().remove(chat);
         jpaChatRepository.save(chat);
-        jpaLinkRepository.save(link);
 
         return LinkFactory.entityToDto(link);
     }
 
     @Override
     public Collection<LinkDto> listAll(long tgChatId) {
-        ChatEntity chat = jpaChatRepository.findById(tgChatId)
+        ChatEntity chat = jpaChatRepository.findByTgChatId(tgChatId)
             .orElseThrow(() -> new RuntimeException(String.format(CHAT_NOT_FOUND_TEMPLATE, tgChatId)));
 
         Collection<LinkDto> links = new HashSet<>();
