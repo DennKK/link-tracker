@@ -1,5 +1,6 @@
 package edu.java.bot.controller;
 
+import edu.java.bot.ListenerBot;
 import edu.java.bot.controller.api.BotApi;
 import edu.java.payload.dto.request.LinkUpdateRequest;
 import lombok.RequiredArgsConstructor;
@@ -10,8 +11,11 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequiredArgsConstructor
 public class BotController implements BotApi {
+    private final ListenerBot listenerBot;
+
     @Override
     public void updatesPost(LinkUpdateRequest request) {
         log.info("new update request " + request.description());
+        listenerBot.updateRequest(request.tgChatIds(), request.url(), request.description());
     }
 }
