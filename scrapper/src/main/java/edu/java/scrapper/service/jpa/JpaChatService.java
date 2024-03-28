@@ -13,7 +13,7 @@ public class JpaChatService implements ChatService {
     @Override
     public void register(long tgChatId) {
         ChatEntity chat = new ChatEntity();
-        chat.setChatId(tgChatId);
+        chat.setTgChatId(tgChatId);
         chat.setRegisteredAt(OffsetDateTime.now());
         jpaChatRepository.save(chat);
     }
