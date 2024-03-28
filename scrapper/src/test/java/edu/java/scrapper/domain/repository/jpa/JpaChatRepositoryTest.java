@@ -24,8 +24,8 @@ public class JpaChatRepositoryTest extends IntegrationEnvironment {
     @Rollback
     public void findAndAddTest() {
         List<ChatEntity> chats = new ArrayList<>();
-        chats.add(new ChatEntity(null, OffsetDateTime.now(), new HashSet<>()));
-        chats.add(new ChatEntity(null, OffsetDateTime.now(), new HashSet<>()));
+        chats.add(new ChatEntity(null, 1L, OffsetDateTime.now(), new HashSet<>()));
+        chats.add(new ChatEntity(null, 2L, OffsetDateTime.now(), new HashSet<>()));
 
         chatRepository.saveAll(chats);
 
@@ -35,6 +35,7 @@ public class JpaChatRepositoryTest extends IntegrationEnvironment {
             long difference =
                 ChronoUnit.SECONDS.between(chats.get(i).getRegisteredAt(), chatsFromDb.get(i).getRegisteredAt());
             Assertions.assertTrue(Math.abs(difference) < 5); // Acceptable difference of less than 5 seconds
+            Assertions.assertEquals(chats.get(i).getTgChatId(), chatsFromDb.get(i).getTgChatId());
         }
     }
 
@@ -42,15 +43,12 @@ public class JpaChatRepositoryTest extends IntegrationEnvironment {
     @Transactional
     @Rollback
     void removeTest() {
-        ChatEntity chat = new ChatEntity(
-            null,
-            OffsetDateTime.now(),
-            new HashSet<>()
-        );
-
+        ChatEntity chat = new ChatEntity(null, 1L, OffsetDateTime.now(), new HashSet<>());
         chatRepository.save(chat);
+
         List<ChatEntity> chatsFromDb = chatRepository.findAll();
         Assertions.assertEquals(1, chatsFromDb.size());
+
         chatRepository.delete(chat);
         chatsFromDb = chatRepository.findAll();
         Assertions.assertEquals(0, chatsFromDb.size());
