@@ -1,11 +1,11 @@
 package edu.java.bot.configuration;
 
+import edu.java.bot.client.ScrapperClient;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.reactive.function.client.WebClient;
 
 @Validated
 @Configuration
@@ -15,7 +15,7 @@ public class ClientConfiguration {
     String baseUrlScrapper;
 
     @Bean
-    public WebClient getScrapperClient() {
-        return WebClient.builder().baseUrl(baseUrlScrapper).build();
+    public ScrapperClient getScrapperClient() {
+        return new ScrapperClient(baseUrlScrapper);
     }
 }
