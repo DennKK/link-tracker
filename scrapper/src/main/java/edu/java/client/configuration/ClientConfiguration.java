@@ -7,7 +7,6 @@ import org.springframework.web.reactive.function.client.WebClient;
 
 @Configuration
 public class ClientConfiguration {
-
     @Value("${clients.base-url.github:https://api.github.com}")
     private String gitHubBaseUrl;
     @Value("${clients.base-url.stackoverflow:https://api.stackexchange.com/2.3}")
