@@ -24,21 +24,22 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "\"CHATS\"")
+@Table(name = "chats")
 public class ChatEntity {
     @Id
-    @Column(name = "\"CHAT_ID\"")
+    @Column(name = "chat_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long chatId;
-
-    @Column(name = "\"REGISTERED_AT\"")
+    @Column(name = "tg_cha_id")
+    private Long tgChatId;
+    @Column(name = "registered_at")
     private OffsetDateTime registeredAt;
 
     @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinTable(
-        name = "\"LINKS_TO_CHATS\"",
-        joinColumns = @JoinColumn(name = "\"CHAT_ID\""),
-        inverseJoinColumns = @JoinColumn(name = "\"LINK_ID\"")
+        name = "links_to_chats",
+        joinColumns = @JoinColumn(name = "chat_id"),
+        inverseJoinColumns = @JoinColumn(name = "link_id")
     )
     private Set<LinkEntity> links = new HashSet<>();
 }
