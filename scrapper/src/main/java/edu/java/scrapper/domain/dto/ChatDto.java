@@ -12,5 +12,6 @@ import lombok.Setter;
 @NoArgsConstructor
 public class ChatDto {
     private Long chatId;
+    private Long tgChatId;
     private OffsetDateTime registeredAt;
 }
