@@ -1,11 +1,11 @@
 package edu.java.processor;
 
 import edu.java.scrapper.domain.dto.LinkDto;
-import org.springframework.stereotype.Component;
 import java.time.OffsetDateTime;
+import org.springframework.stereotype.Component;
 
 @Component
-public class GitHubLinkUpdateProcessor implements LinkUpdateProcessor{
+public class GitHubLinkUpdateProcessor implements LinkUpdateProcessor {
     @Override
     public boolean supports(String url) {
         return false;

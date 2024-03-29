@@ -5,7 +5,7 @@ import java.time.OffsetDateTime;
 import org.springframework.stereotype.Component;
 
 @Component
-public class StackoverflowLinkUpdateProcessor implements LinkUpdateProcessor{
+public class StackoverflowLinkUpdateProcessor implements LinkUpdateProcessor {
     @Override
     public boolean supports(String url) {
         return false;
