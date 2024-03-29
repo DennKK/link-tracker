@@ -23,7 +23,7 @@ public class LinkUpdaterScheduler implements LinkUpdater {
     private LinkService linkService;
 
     @Override
-    @Scheduled(fixedDelayString = "${app.scheduler.interval}")
+    @Scheduled(fixedRateString = "${app.scheduler.interval}", fixedDelayString = "${app.scheduler.force-delay-check}")
     public void update() {
         log.info("Running link update task...");
 
