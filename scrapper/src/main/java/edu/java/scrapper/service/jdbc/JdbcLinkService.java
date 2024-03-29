@@ -5,11 +5,13 @@ import edu.java.scrapper.domain.dto.LinkDto;
 import edu.java.scrapper.domain.repository.jdbc.JdbcChatRepository;
 import edu.java.scrapper.domain.repository.jdbc.JdbcLinkRepository;
 import edu.java.scrapper.service.LinkService;
-import edu.java.scrapper.service.factory.LinkFactory;
 import java.net.URI;
+import java.time.OffsetDateTime;
 import java.util.Collection;
 import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
 
+@Service
 @RequiredArgsConstructor
 public class JdbcLinkService implements LinkService {
     private final JdbcLinkRepository jdbcLinkRepository;
@@ -17,7 +19,10 @@ public class JdbcLinkService implements LinkService {
 
     @Override
     public LinkDto add(long tgChatId, URI url) {
-        LinkDto link = LinkFactory.createLinkDto(url);
+        LinkDto link = new LinkDto();
+        link.setUrl(url.toString());
+        link.setCheckedAt(OffsetDateTime.now());
+        link.setUpdatedAt(OffsetDateTime.now());
         jdbcLinkRepository.add(link);
         LinkDto linkFromDb = jdbcLinkRepository.getByUrl(link.getUrl());
         ChatDto chatFromDb = jdbcChatRepository.findByTgChatId(tgChatId);
@@ -46,11 +51,16 @@ public class JdbcLinkService implements LinkService {
 
     @Override
     public Collection<LinkDto> getOlderThan(int minutes) {
-        return jdbcLinkRepository.findOlderThan(minutes);
+        return jdbcLinkRepository.findLinksNotCheckedSince(minutes);
     }
 
     @Override
-    public void updateLink(LinkDto link) {
-        jdbcLinkRepository.update(link);
+    public void updateLastCheckTime(LinkDto link) {
+        jdbcLinkRepository.updateLastCheckTime(link);
+    }
+
+    @Override
+    public void refreshLinkActivity(LinkDto link) {
+        jdbcLinkRepository.refreshLinkActivity(link);
     }
 }

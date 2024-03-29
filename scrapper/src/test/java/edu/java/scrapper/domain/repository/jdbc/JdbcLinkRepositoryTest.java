@@ -23,8 +23,8 @@ public class JdbcLinkRepositoryTest extends IntegrationEnvironment {
     @Rollback
     public void findAndAddTest() {
         List<LinkDto> links = new ArrayList<>();
-        links.add(new LinkDto(null, "stackoferflow.com", OffsetDateTime.now()));
-        links.add(new LinkDto(null, "github.com", OffsetDateTime.now()));
+        links.add(new LinkDto(null, "stackoferflow.com", OffsetDateTime.now(), OffsetDateTime.now()));
+        links.add(new LinkDto(null, "github.com", OffsetDateTime.now(), OffsetDateTime.now()));
 
         for (LinkDto link : links) {
             linkRepository.add(link);
@@ -47,6 +47,7 @@ public class JdbcLinkRepositoryTest extends IntegrationEnvironment {
         LinkDto link = new LinkDto(
             null,
             "stackoferflow.com",
+            OffsetDateTime.now(),
             OffsetDateTime.now()
         );
         linkRepository.add(link);
@@ -61,6 +62,7 @@ public class JdbcLinkRepositoryTest extends IntegrationEnvironment {
         LinkDto link = new LinkDto(
             null,
             url,
+            OffsetDateTime.now(),
             OffsetDateTime.now()
         );
         linkRepository.add(link);

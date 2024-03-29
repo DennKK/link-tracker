@@ -14,7 +14,9 @@ public interface LinkService {
 
     Collection<LinkDto> getOlderThan(int minutes);
 
-    void updateLink(LinkDto link);
+    void updateLastCheckTime(LinkDto link);
+
+    void refreshLinkActivity(LinkDto link);
 
     Collection<ChatDto> getChatsForLink(LinkDto link);
 }

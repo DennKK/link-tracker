@@ -31,7 +31,7 @@ public class JdbcLinkRepository implements LinkRepository {
     @Transactional
     public void add(LinkDto link) {
         jdbcTemplate.update(
-            "INSERT INTO links(url, updated_at) VALUES(:url, :updatedAt)",
+            "INSERT INTO links(url, checked_at, updated_at) VALUES(:url, :checkedAt, :updatedAt)",
             new BeanPropertySqlParameterSource(link)
         );
     }
@@ -93,16 +93,26 @@ public class JdbcLinkRepository implements LinkRepository {
     }
 
     @Override
-    public Collection<LinkDto> findOlderThan(int minutes) {
+    public Collection<LinkDto> findLinksNotCheckedSince(int minutes) {
         return jdbcTemplate.query(
-            "SELECT * FROM links WHERE (NOW() - updated_at) > (:interval * INTERVAL '1 minute')",
+            "SELECT * FROM links WHERE (NOW() - checked_at) > (:interval * INTERVAL '1 minute')",
             new MapSqlParameterSource().addValue("interval", minutes),
             rowMapper
         );
     }
 
     @Override
-    public void update(LinkDto link) {
+    public void updateLastCheckTime(LinkDto link) {
+        jdbcTemplate.update(
+            "UPDATE links SET checked_at = :checkedAt WHERE link_id = :link_id",
+            new MapSqlParameterSource()
+                .addValue("checkedAt", link.getCheckedAt())
+                .addValue(linkIdTemplate, link.getLinkId())
+        );
+    }
+
+    @Override
+    public void refreshLinkActivity(LinkDto link) {
         jdbcTemplate.update(
             "UPDATE links SET updated_at = :updatedAt WHERE link_id = :link_id",
             new MapSqlParameterSource()

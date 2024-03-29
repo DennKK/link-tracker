@@ -32,6 +32,7 @@ public class Links implements Serializable {
 
     private Long linkId;
     private String url;
+    private OffsetDateTime checkedAt;
     private OffsetDateTime updatedAt;
 
     public Links() {}
@@ -39,17 +40,20 @@ public class Links implements Serializable {
     public Links(Links value) {
         this.linkId = value.linkId;
         this.url = value.url;
+        this.checkedAt = value.checkedAt;
         this.updatedAt = value.updatedAt;
     }
 
-    @ConstructorProperties({ "linkId", "url", "updatedAt" })
+    @ConstructorProperties({ "linkId", "url", "checkedAt", "updatedAt" })
     public Links(
         @NotNull Long linkId,
         @NotNull String url,
+        @NotNull OffsetDateTime checkedAt,
         @NotNull OffsetDateTime updatedAt
     ) {
         this.linkId = linkId;
         this.url = url;
+        this.checkedAt = checkedAt;
         this.updatedAt = updatedAt;
     }
 
@@ -83,6 +87,22 @@ public class Links implements Serializable {
      */
     public void setUrl(@NotNull String url) {
         this.url = url;
+    }
+
+    /**
+     * Getter for <code>LINKS.CHECKED_AT</code>.
+     */
+    @jakarta.validation.constraints.NotNull
+    @NotNull
+    public OffsetDateTime getCheckedAt() {
+        return this.checkedAt;
+    }
+
+    /**
+     * Setter for <code>LINKS.CHECKED_AT</code>.
+     */
+    public void setCheckedAt(@NotNull OffsetDateTime checkedAt) {
+        this.checkedAt = checkedAt;
     }
 
     /**
@@ -122,6 +142,12 @@ public class Links implements Serializable {
         }
         else if (!this.url.equals(other.url))
             return false;
+        if (this.checkedAt == null) {
+            if (other.checkedAt != null)
+                return false;
+        }
+        else if (!this.checkedAt.equals(other.checkedAt))
+            return false;
         if (this.updatedAt == null) {
             if (other.updatedAt != null)
                 return false;
@@ -137,6 +163,7 @@ public class Links implements Serializable {
         int result = 1;
         result = prime * result + ((this.linkId == null) ? 0 : this.linkId.hashCode());
         result = prime * result + ((this.url == null) ? 0 : this.url.hashCode());
+        result = prime * result + ((this.checkedAt == null) ? 0 : this.checkedAt.hashCode());
         result = prime * result + ((this.updatedAt == null) ? 0 : this.updatedAt.hashCode());
         return result;
     }
@@ -147,6 +174,7 @@ public class Links implements Serializable {
 
         sb.append(linkId);
         sb.append(", ").append(url);
+        sb.append(", ").append(checkedAt);
         sb.append(", ").append(updatedAt);
 
         sb.append(")");

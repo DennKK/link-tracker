@@ -19,9 +19,11 @@ public interface LinkRepository {
 
     LinkDto getByUrl(String url);
 
-    Collection<LinkDto> findOlderThan(int minutes);
+    Collection<LinkDto> findLinksNotCheckedSince(int minutes);
 
-    void update(LinkDto link);
+    void updateLastCheckTime(LinkDto link);
+
+    void refreshLinkActivity(LinkDto link);
 
     Collection<ChatDto> getChats(LinkDto link);
 }

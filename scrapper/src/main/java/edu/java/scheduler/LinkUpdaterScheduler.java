@@ -8,70 +8,50 @@ import edu.java.scrapper.service.LinkService;
 import java.time.OffsetDateTime;
 import java.util.Collection;
 import java.util.List;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
-@Slf4j
-@Component
 @EnableScheduling
+@Component
 @RequiredArgsConstructor
 public class LinkUpdaterScheduler implements LinkUpdater {
-    private final GitHubClient gitHubClient;
-    @Value("${app.update-frequency:1}")
-    private int updateFrequency;
-    private final LinkService linkService;
-    private final BotClient botClient;
+    private static final Logger LOGGER = Logger.getLogger(LinkUpdaterScheduler.class.getName());
+    private GitHubClient gitHubClient;
+    @Value("${app.update-frequency}")
+    protected int updateFrequency;
+    private LinkService linkService;
+    private BotClient botClient;
 
     @Override
-    @Scheduled(fixedRateString = "${app.scheduler.interval}", fixedDelayString = "${app.scheduler.force-check-delay}")
+    @Scheduled(fixedDelayString = "${app.scheduler.interval}")
     public void update() {
-        try {
-            log.info("Начало выполнения задачи обновления ссылок...");
-            Collection<LinkDto> oldLinks = linkService.getOlderThan(updateFrequency);
-            log.info("Найдено {} ссылок для обновления.", oldLinks.size());
+        LOGGER.info("Running link update task...");
 
-            for (LinkDto link : oldLinks) {
-                OffsetDateTime lastTimeUpdated = getLastUpdateTime(link);
-                if (lastTimeUpdated.isAfter(link.getUpdatedAt())) {
-                    Collection<ChatDto> chats = linkService.getChatsForLink(link);
-                    List<Long> tgChatIds = chats.stream().map(ChatDto::getTgChatId).collect(Collectors.toList());
-                    botClient.sendUpdateToBot(link, tgChatIds);
-                    link.setUpdatedAt(lastTimeUpdated);
-                    linkService.updateLink(link);
-                }
+        Collection<LinkDto> oldLinks = linkService.getOlderThan(updateFrequency);
+        for (LinkDto link : oldLinks) {
+            OffsetDateTime lastTimeUpdated = getLastUpdateTime(link);
+            if (lastTimeUpdated.isAfter(link.getUpdatedAt())) {
+                Collection<ChatDto> chats = linkService.getChatsForLink(link);
+                List<Long> chatIds = chats.stream().map(ChatDto::getChatId).collect(Collectors.toList());
+                botClient.sendUpdateToBot(link, chatIds);
+                link.setCheckedAt(OffsetDateTime.now());
+                link.setUpdatedAt(lastTimeUpdated);
+                linkService.updateLastCheckTime(link);
+                linkService.refreshLinkActivity(link);
             }
-
-            log.info("Задача обновления ссылок успешно выполнена.");
-        } catch (Exception e) {
-            log.error("Ошибка при выполнении задачи обновления ссылок: {}", e.getMessage());
         }
-        log.info("Метод завершил работу");
     }
 
-    // TODO: Move the parser into a separate module
-    // Временная функция для парсинг url
-    private String[] parseGithubLink(String url) throws RuntimeException {
-        String linkNotFoundTemplate = "Link does not match format %s {username}/{reponame}";
-        String expectedPrefix = "https://github.com/";
-        if (!url.startsWith(expectedPrefix)) {
-            throw new RuntimeException(String.format(linkNotFoundTemplate, expectedPrefix));
-        }
-
-        String[] parts = url.substring(expectedPrefix.length()).split("/");
-        if (parts.length != 2 || parts[0].isEmpty() || parts[1].isEmpty()) {
-            throw new RuntimeException(String.format(linkNotFoundTemplate, expectedPrefix));
-        }
-
-        return new String[] {parts[0], parts[1]};
-    }
-
+    // TODO: Create url parser
+    // В предыдущих заданиях нигде не было необходимости парсить ссылки
+    // Хотелось бы отличать ссылку на stackoverflow и github друга от друга и от других ссылок
+    // Распарсиватель ссылок пока не готов, поэтому оставляю заглушку
     private OffsetDateTime getLastUpdateTime(LinkDto link) {
-        String[] parsedLink = parseGithubLink(link.getUrl());
-        return OffsetDateTime.parse(gitHubClient.getGitHubResponse(parsedLink[0], parsedLink[1]).updatedAt());
+        return OffsetDateTime.parse(gitHubClient.getGitHubResponse("DennKK", "link-tracker").updatedAt());
     }
 }

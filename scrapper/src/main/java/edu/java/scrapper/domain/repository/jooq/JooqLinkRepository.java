@@ -29,6 +29,7 @@ public class JooqLinkRepository implements LinkRepository {
     public void add(LinkDto link) {
         dslContext.insertInto(LINKS)
             .set(LINKS.URL, link.getUrl())
+            .set(LINKS.CHECKED_AT, link.getCheckedAt())
             .set(LINKS.UPDATED_AT, link.getUpdatedAt())
             .execute();
     }
@@ -57,13 +58,19 @@ public class JooqLinkRepository implements LinkRepository {
     }
 
     @Override
-    public void update(LinkDto link) {
+    public void updateLastCheckTime(LinkDto link) {
         dslContext.update(LINKS)
-            .set(LINKS.URL, link.getUrl())
+            .set(LINKS.CHECKED_AT, link.getCheckedAt())
+            .where(LINKS.LINK_ID.eq(link.getLinkId()))
+            .execute();
+    }
+
+    @Override
+    public void refreshLinkActivity(LinkDto link) {
+        dslContext.update(LINKS)
             .set(LINKS.UPDATED_AT, link.getUpdatedAt())
             .where(LINKS.LINK_ID.eq(link.getLinkId()))
             .execute();
-
     }
 
     @Override
@@ -76,11 +83,11 @@ public class JooqLinkRepository implements LinkRepository {
     }
 
     @Override
-    public Collection<LinkDto> findOlderThan(int minutes) {
+    public Collection<LinkDto> findLinksNotCheckedSince(int minutes) {
         OffsetDateTime thresholdTime = OffsetDateTime.now().minusMinutes(minutes);
 
         return dslContext.selectFrom(LINKS)
-            .where(LINKS.UPDATED_AT.lessThan(thresholdTime))
+            .where(LINKS.CHECKED_AT.lessThan(thresholdTime))
             .fetchInto(LinkDto.class);
     }
 
@@ -96,8 +103,9 @@ public class JooqLinkRepository implements LinkRepository {
         return result.map(resultRecord -> {
             Long linkId = resultRecord.get(LINKS.LINK_ID);
             String url = resultRecord.get(LINKS.URL);
+            OffsetDateTime checkedAt = resultRecord.get(LINKS.CHECKED_AT);
             OffsetDateTime updatedAt = resultRecord.get(LINKS.UPDATED_AT);
-            return new LinkDto(linkId, url, updatedAt);
+            return new LinkDto(linkId, url, checkedAt, updatedAt);
         });
     }
 

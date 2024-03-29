@@ -16,12 +16,12 @@ import javax.annotation.processing.Generated;
 import org.jetbrains.annotations.NotNull;
 import org.jooq.Field;
 import org.jooq.ForeignKey;
-import org.jooq.Function3;
+import org.jooq.Function4;
 import org.jooq.Identity;
 import org.jooq.Name;
 import org.jooq.Record;
 import org.jooq.Records;
-import org.jooq.Row3;
+import org.jooq.Row4;
 import org.jooq.Schema;
 import org.jooq.SelectField;
 import org.jooq.Table;
@@ -71,6 +71,11 @@ public class Links extends TableImpl<LinksRecord> {
      * The column <code>LINKS.URL</code>.
      */
     public final TableField<LinksRecord, String> URL = createField(DSL.name("URL"), SQLDataType.VARCHAR(255).nullable(false), this, "");
+
+    /**
+     * The column <code>LINKS.CHECKED_AT</code>.
+     */
+    public final TableField<LinksRecord, OffsetDateTime> CHECKED_AT = createField(DSL.name("CHECKED_AT"), SQLDataType.TIMESTAMPWITHTIMEZONE(6).nullable(false), this, "");
 
     /**
      * The column <code>LINKS.UPDATED_AT</code>.
@@ -174,19 +179,19 @@ public class Links extends TableImpl<LinksRecord> {
     }
 
     // -------------------------------------------------------------------------
-    // Row3 type methods
+    // Row4 type methods
     // -------------------------------------------------------------------------
 
     @Override
     @NotNull
-    public Row3<Long, String, OffsetDateTime> fieldsRow() {
-        return (Row3) super.fieldsRow();
+    public Row4<Long, String, OffsetDateTime, OffsetDateTime> fieldsRow() {
+        return (Row4) super.fieldsRow();
     }
 
     /**
      * Convenience mapping calling {@link SelectField#convertFrom(Function)}.
      */
-    public <U> SelectField<U> mapping(Function3<? super Long, ? super String, ? super OffsetDateTime, ? extends U> from) {
+    public <U> SelectField<U> mapping(Function4<? super Long, ? super String, ? super OffsetDateTime, ? super OffsetDateTime, ? extends U> from) {
         return convertFrom(Records.mapping(from));
     }
 
@@ -194,7 +199,7 @@ public class Links extends TableImpl<LinksRecord> {
      * Convenience mapping calling {@link SelectField#convertFrom(Class,
      * Function)}.
      */
-    public <U> SelectField<U> mapping(Class<U> toType, Function3<? super Long, ? super String, ? super OffsetDateTime, ? extends U> from) {
+    public <U> SelectField<U> mapping(Class<U> toType, Function4<? super Long, ? super String, ? super OffsetDateTime, ? super OffsetDateTime, ? extends U> from) {
         return convertFrom(toType, Records.mapping(from));
     }
 }

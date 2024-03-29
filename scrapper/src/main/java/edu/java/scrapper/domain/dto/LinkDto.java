@@ -13,5 +13,6 @@ import lombok.Setter;
 public class LinkDto {
     private Long linkId;
     private String url;
+    private OffsetDateTime checkedAt;
     private OffsetDateTime updatedAt;
 }
