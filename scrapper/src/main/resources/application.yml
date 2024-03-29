@@ -4,7 +4,7 @@ app:
     interval: 10s
     force-check-delay: 10s
   access-type: jpa
-  update-frequency: 10
+  update-frequency: 1
 
 spring:
   liquibase:
@@ -32,7 +32,11 @@ server:
   port: 8080
 
 logging:
-  config: classpath:log4j2-plain.xml
+  level:
+    root: INFO # Установка глобального уровня логирования
+    edu.java.scheduler: DEBUG # Увеличение детализации логов для пакета планировщика
+  config: classpath:log4j2-plain.xml # Указание на файл конфигурации Log4j2
+
 
 springdoc:
   swagger-ui:
