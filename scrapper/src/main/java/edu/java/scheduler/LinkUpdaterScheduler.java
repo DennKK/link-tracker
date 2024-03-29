@@ -8,41 +8,49 @@ import edu.java.scrapper.service.LinkService;
 import java.time.OffsetDateTime;
 import java.util.Collection;
 import java.util.List;
-import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
-@EnableScheduling
+@Slf4j
 @Component
+@EnableScheduling
 @RequiredArgsConstructor
 public class LinkUpdaterScheduler implements LinkUpdater {
-    private static final Logger LOGGER = Logger.getLogger(LinkUpdaterScheduler.class.getName());
     private final GitHubClient gitHubClient;
-    @Value("${app.update-frequency}")
+    @Value("${app.update-frequency:1}")
     private int updateFrequency;
     private final LinkService linkService;
     private final BotClient botClient;
 
     @Override
-    @Scheduled(fixedDelayString = "${app.scheduler.interval}")
+    @Scheduled(fixedRateString = "${app.scheduler.interval}", fixedDelayString = "${app.scheduler.force-check-delay}")
     public void update() {
-        LOGGER.info("Running link update task...");
+        try {
+            log.info("Начало выполнения задачи обновления ссылок...");
+            Collection<LinkDto> oldLinks = linkService.getOlderThan(updateFrequency);
+            log.info("Найдено {} ссылок для обновления.", oldLinks.size());
 
-        Collection<LinkDto> oldLinks = linkService.getOlderThan(updateFrequency);
-        for (LinkDto link : oldLinks) {
-            OffsetDateTime lastTimeUpdated = getLastUpdateTime(link);
-            if (lastTimeUpdated.isAfter(link.getUpdatedAt())) {
-                Collection<ChatDto> chats = linkService.getChatsForLink(link);
-                List<Long> chatIds = chats.stream().map(ChatDto::getChatId).collect(Collectors.toList());
-                botClient.sendUpdateToBot(link, chatIds);
-                link.setUpdatedAt(lastTimeUpdated);
-                linkService.updateLink(link);
+            for (LinkDto link : oldLinks) {
+                OffsetDateTime lastTimeUpdated = getLastUpdateTime(link);
+                if (lastTimeUpdated.isAfter(link.getUpdatedAt())) {
+                    Collection<ChatDto> chats = linkService.getChatsForLink(link);
+                    List<Long> tgChatIds = chats.stream().map(ChatDto::getTgChatId).collect(Collectors.toList());
+                    botClient.sendUpdateToBot(link, tgChatIds);
+                    link.setUpdatedAt(lastTimeUpdated);
+                    linkService.updateLink(link);
+                }
             }
+
+            log.info("Задача обновления ссылок успешно выполнена.");
+        } catch (Exception e) {
+            log.error("Ошибка при выполнении задачи обновления ссылок: {}", e.getMessage());
         }
+        log.info("Метод завершил работу");
     }
 
     // TODO: Move the parser into a separate module
