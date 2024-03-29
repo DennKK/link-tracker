@@ -39,8 +39,10 @@ public class LinkUpdaterScheduler implements LinkUpdater {
                 Collection<ChatDto> chats = linkService.getChatsForLink(link);
                 List<Long> chatIds = chats.stream().map(ChatDto::getChatId).collect(Collectors.toList());
                 botClient.sendUpdateToBot(link, chatIds);
+                link.setCheckedAt(OffsetDateTime.now());
                 link.setUpdatedAt(lastTimeUpdated);
-                linkService.updateLink(link);
+                linkService.updateLastCheckTime(link);
+                linkService.refreshLinkActivity(link);
             }
         }
     }
