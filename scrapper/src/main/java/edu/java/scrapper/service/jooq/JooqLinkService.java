@@ -18,7 +18,8 @@ public class JooqLinkService implements LinkService {
     @Override
     public LinkDto add(long tgChatId, URI url) {
         LinkDto link = new LinkDto();
-        link.setUrl(String.valueOf(url));
+        link.setUrl(url.toString());
+        link.setCheckedAt(OffsetDateTime.now());
         link.setUpdatedAt(OffsetDateTime.now());
         jooqLinkRepository.add(link);
         LinkDto linkFromDb = jooqLinkRepository.getByUrl(link.getUrl());
@@ -42,17 +43,22 @@ public class JooqLinkService implements LinkService {
     }
 
     @Override
-    public Collection<LinkDto> getOlderThan(int minutes) {
-        return jooqLinkRepository.findOlderThan(minutes);
-    }
-
-    @Override
-    public void updateLink(LinkDto link) {
-        jooqLinkRepository.update(link);
-    }
-
-    @Override
     public Collection<ChatDto> getChatsForLink(LinkDto link) {
         return jooqLinkRepository.getChats(link);
+    }
+
+    @Override
+    public Collection<LinkDto> getOlderThan(int minutes) {
+        return jooqLinkRepository.findLinksNotCheckedSince(minutes);
+    }
+
+    @Override
+    public void updateLastCheckTime(LinkDto link) {
+        jooqLinkRepository.updateLastCheckTime(link);
+    }
+
+    @Override
+    public void refreshLinkActivity(LinkDto link) {
+        jooqLinkRepository.refreshLinkActivity(link);
     }
 }

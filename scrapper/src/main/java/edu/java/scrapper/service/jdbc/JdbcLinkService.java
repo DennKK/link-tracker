@@ -21,6 +21,7 @@ public class JdbcLinkService implements LinkService {
     public LinkDto add(long tgChatId, URI url) {
         LinkDto link = new LinkDto();
         link.setUrl(url.toString());
+        link.setCheckedAt(OffsetDateTime.now());
         link.setUpdatedAt(OffsetDateTime.now());
         jdbcLinkRepository.add(link);
         LinkDto linkFromDb = jdbcLinkRepository.getByUrl(link.getUrl());
@@ -50,11 +51,16 @@ public class JdbcLinkService implements LinkService {
 
     @Override
     public Collection<LinkDto> getOlderThan(int minutes) {
-        return jdbcLinkRepository.findOlderThan(minutes);
+        return jdbcLinkRepository.findLinksNotCheckedSince(minutes);
     }
 
     @Override
-    public void updateLink(LinkDto link) {
-        jdbcLinkRepository.update(link);
+    public void updateLastCheckTime(LinkDto link) {
+        jdbcLinkRepository.updateLastCheckTime(link);
+    }
+
+    @Override
+    public void refreshLinkActivity(LinkDto link) {
+        jdbcLinkRepository.refreshLinkActivity(link);
     }
 }
