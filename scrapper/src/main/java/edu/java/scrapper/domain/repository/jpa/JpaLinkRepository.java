@@ -13,6 +13,6 @@ import org.springframework.stereotype.Repository;
 public interface JpaLinkRepository extends JpaRepository<LinkEntity, Long> {
     Optional<LinkEntity> findByUrl(String url);
 
-    @Query("SELECT le FROM LinkEntity le WHERE le.updatedAt < :cutoff")
-    Collection<LinkEntity> findOlderThan(@Param("cutoff") OffsetDateTime cutoff);
+    @Query("SELECT le FROM LinkEntity le WHERE le.checkedAt < :cutoff")
+    Collection<LinkEntity> findLinksNotCheckedSince(@Param("cutoff") OffsetDateTime cutoff);
 }

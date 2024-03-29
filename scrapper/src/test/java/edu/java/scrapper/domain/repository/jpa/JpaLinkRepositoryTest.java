@@ -24,8 +24,14 @@ public class JpaLinkRepositoryTest extends IntegrationEnvironment {
     @Rollback
     public void findAndAddTest() {
         List<LinkEntity> links = new ArrayList<>();
-        links.add(new LinkEntity(null, "https://vk.com", OffsetDateTime.now(), new HashSet<>()));
-        links.add(new LinkEntity(null, "https://vk.com/feed", OffsetDateTime.now(), new HashSet<>()));
+        links.add(new LinkEntity(null, "https://vk.com", OffsetDateTime.now(), OffsetDateTime.now(), new HashSet<>()));
+        links.add(new LinkEntity(
+            null,
+            "https://vk.com/feed",
+            OffsetDateTime.now(),
+            OffsetDateTime.now(),
+            new HashSet<>()
+        ));
 
         linkRepository.saveAll(links);
 
@@ -43,7 +49,8 @@ public class JpaLinkRepositoryTest extends IntegrationEnvironment {
     @Transactional
     @Rollback
     void removeTest() {
-        LinkEntity link = new LinkEntity(null, "https://vk.com", OffsetDateTime.now(), new HashSet<>());
+        LinkEntity link =
+            new LinkEntity(null, "https://vk.com", OffsetDateTime.now(), OffsetDateTime.now(), new HashSet<>());
 
         linkRepository.save(link);
         List<LinkEntity> linksFromDb = linkRepository.findAll();

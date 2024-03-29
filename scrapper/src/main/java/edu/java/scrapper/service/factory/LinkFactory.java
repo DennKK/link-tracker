@@ -11,6 +11,7 @@ public class LinkFactory {
     public static LinkDto createLinkDto(URI url) {
         LinkDto link = new LinkDto();
         link.setUrl(url.toString());
+        link.setCheckedAt(OffsetDateTime.now());
         link.setUpdatedAt(OffsetDateTime.now());
         return link;
     }
@@ -18,6 +19,7 @@ public class LinkFactory {
     public static LinkEntity createLinkEntity(URI url) {
         LinkEntity link = new LinkEntity();
         link.setUrl(url.toString());
+        link.setCheckedAt(OffsetDateTime.now());
         link.setUpdatedAt(OffsetDateTime.now());
         return link;
     }
@@ -26,6 +28,7 @@ public class LinkFactory {
         LinkDto linkDto = new LinkDto();
         linkDto.setLinkId(linkEntity.getLinkId());
         linkDto.setUrl(linkEntity.getUrl());
+        linkDto.setCheckedAt(linkEntity.getCheckedAt());
         linkDto.setUpdatedAt(linkEntity.getUpdatedAt());
         return linkDto;
     }

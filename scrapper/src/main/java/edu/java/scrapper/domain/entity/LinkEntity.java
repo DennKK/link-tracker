@@ -31,6 +31,9 @@ public class LinkEntity {
     @Column(name = "url")
     private String url;
 
+    @Column(name = "checked_at")
+    private OffsetDateTime checkedAt;
+
     @Column(name = "updated_at")
     private OffsetDateTime updatedAt;
 
