@@ -35,13 +35,13 @@ public class TrackCommand implements Command {
         long chatId = update.message().chat().id();
 
         if (isReply(update)) {
-            return handeReply(update);
+            return handelReply(update);
         }
         return new SendMessage(chatId, REPLY_TEXT).replyMarkup(new ForceReply());
 
     }
 
-    private SendMessage handeReply(Update update) {
+    private SendMessage handelReply(Update update) {
         Long chatId = update.message().chat().id();
         String url = update.message().text().trim();
         String replyMessage = "Now we are tracking your link!";
