@@ -4,6 +4,7 @@ import edu.java.scrapper.IntegrationEnvironment;
 import edu.java.scrapper.domain.dto.LinkDto;
 import edu.java.scrapper.domain.repository.jooq.config.JooqConfig;
 import java.time.OffsetDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 import org.junit.jupiter.api.Assertions;
@@ -25,17 +26,20 @@ public class JooqLinkRepositoryTest extends IntegrationEnvironment {
     @Rollback
     public void findAndAddTest() {
         List<LinkDto> links = new ArrayList<>();
-        links.add(new LinkDto(null, "stackoferflow.com", OffsetDateTime.now()));
-        links.add(new LinkDto(null, "github.com", OffsetDateTime.now()));
+        links.add(new LinkDto(null, "stackoferflow.com", OffsetDateTime.now(), OffsetDateTime.now()));
+        links.add(new LinkDto(null, "github.com", OffsetDateTime.now(), OffsetDateTime.now()));
 
-        for (LinkDto l : links) {
-            linkRepository.add(l);
+        for (LinkDto link : links) {
+            linkRepository.add(link);
         }
 
-        List<LinkDto> linksFromDb = (List<LinkDto>) linkRepository.findAll();
-        Assertions.assertEquals(links.size(), linksFromDb.size());
+        List<LinkDto> linksFromDB = (List<LinkDto>) linkRepository.findAll();
+        Assertions.assertEquals(links.size(), linksFromDB.size());
         for (int i = 0; i < links.size(); i++) {
-            Assertions.assertEquals(links.get(i).getUrl(), linksFromDb.get(i).getUrl());
+            long difference =
+                ChronoUnit.SECONDS.between(links.get(i).getUpdatedAt(), linksFromDB.get(i).getUpdatedAt());
+            Assertions.assertTrue(Math.abs(difference) < 5); // Acceptable difference of less than 5 seconds
+            Assertions.assertEquals(links.get(i).getUrl(), linksFromDB.get(i).getUrl());
         }
     }
 
@@ -46,6 +50,7 @@ public class JooqLinkRepositoryTest extends IntegrationEnvironment {
         LinkDto link = new LinkDto(
             null,
             "stackoferflow.com",
+            OffsetDateTime.now(),
             OffsetDateTime.now()
         );
         linkRepository.add(link);
@@ -60,6 +65,7 @@ public class JooqLinkRepositoryTest extends IntegrationEnvironment {
         LinkDto link = new LinkDto(
             null,
             url,
+            OffsetDateTime.now(),
             OffsetDateTime.now()
         );
         linkRepository.add(link);
