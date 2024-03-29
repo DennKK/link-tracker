@@ -44,6 +44,9 @@ public class GitHubLinkUpdateProcessor implements LinkUpdateProcessor {
                 updateLinkDetails(link, lastActivityTime);
                 notifySubscribers(link);
                 log.info("Link updated successfully: {}", link.getUrl());
+            } else {
+                link.setCheckedAt(OffsetDateTime.now());
+                log.info("No activity for link: {}", link.getUrl());
             }
         } catch (Exception e) {
             log.error("Error updating link {}: {}", link.getUrl(), e.getMessage());
@@ -58,6 +61,7 @@ public class GitHubLinkUpdateProcessor implements LinkUpdateProcessor {
     private void updateLinkDetails(LinkDto link, OffsetDateTime lastActivityTime) {
         link.setCheckedAt(OffsetDateTime.now());
         link.setUpdatedAt(lastActivityTime);
+        linkService.updateLastCheckTime(link);
         linkService.updateLastCheckTime(link);
     }
 
