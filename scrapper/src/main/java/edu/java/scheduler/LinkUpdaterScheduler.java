@@ -1,6 +1,5 @@
 package edu.java.scheduler;
 
-import edu.java.client.tgbot.BotClient;
 import edu.java.processor.LinkUpdateProcessor;
 import edu.java.scrapper.domain.dto.LinkDto;
 import edu.java.scrapper.service.LinkService;
@@ -22,7 +21,6 @@ public class LinkUpdaterScheduler implements LinkUpdater {
     @Value("${app.update-frequency}")
     protected int updateFrequency;
     private LinkService linkService;
-    private BotClient botClient;
 
     @Override
     @Scheduled(fixedDelayString = "${app.scheduler.interval}")
