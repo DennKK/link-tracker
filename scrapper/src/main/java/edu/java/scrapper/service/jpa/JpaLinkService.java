@@ -65,18 +65,27 @@ public class JpaLinkService implements LinkService {
     @Override
     public Collection<LinkDto> getOlderThan(int minutes) {
         Collection<LinkEntity> linkEntities =
-            jpaLinkRepository.findOlderThan(OffsetDateTime.now().minusMinutes(minutes));
+            jpaLinkRepository.findLinksNotCheckedSince(OffsetDateTime.now().minusMinutes(minutes));
         return linkEntities.stream()
             .map(LinkFactory::entityToDto)
             .collect(Collectors.toList());
     }
 
     @Override
-    public void updateLink(LinkDto linkDto) {
+    public void updateLastCheckTime(LinkDto linkDto) {
         LinkEntity linkEntity = jpaLinkRepository.findById(linkDto.getLinkId())
             .orElseThrow(() -> new RuntimeException(LINK_NOT_FOUND_TEMPLATE));
 
-        linkEntity.setUrl(linkDto.getUrl());
+        linkEntity.setCheckedAt(linkDto.getCheckedAt());
+
+        jpaLinkRepository.save(linkEntity);
+    }
+
+    @Override
+    public void refreshLinkActivity(LinkDto linkDto) {
+        LinkEntity linkEntity = jpaLinkRepository.findById(linkDto.getLinkId())
+            .orElseThrow(() -> new RuntimeException(LINK_NOT_FOUND_TEMPLATE));
+
         linkEntity.setUpdatedAt(linkDto.getUpdatedAt());
 
         jpaLinkRepository.save(linkEntity);
