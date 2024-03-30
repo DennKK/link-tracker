@@ -5,6 +5,7 @@ import edu.java.scrapper.domain.entity.LinkEntity;
 import java.time.OffsetDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import org.junit.jupiter.api.Assertions;
@@ -42,6 +43,47 @@ public class JpaLinkRepositoryTest extends IntegrationEnvironment {
                 ChronoUnit.SECONDS.between(links.get(i).getUpdatedAt(), linksFromDb.get(i).getUpdatedAt());
             Assertions.assertTrue(Math.abs(difference) < 5); // Acceptable difference of less than 5 seconds
             Assertions.assertEquals(links.get(i).getUrl(), linksFromDb.get(i).getUrl());
+        }
+    }
+
+    @Test
+    @Transactional
+    @Rollback
+    void findLinksNotCheckedSinceTest() {
+        int minutes = 10;
+        int expectedCollectionSize = 1;
+        String expectedUrl = "https://vk.com";
+        OffsetDateTime expectedLastCheckTime =
+            OffsetDateTime.parse("2000-03-29T17:00:04Z");
+
+        List<LinkEntity> links = new ArrayList<>(
+            List.of(
+                new LinkEntity(
+                    null,
+                    "https://vk.com",
+                    OffsetDateTime.parse("2000-03-29T17:00:04Z"),
+                    OffsetDateTime.now(),
+                    new HashSet<>()
+                ),
+                new LinkEntity(
+                    null,
+                    "https://vk.com/feed",
+                    OffsetDateTime.now(),
+                    OffsetDateTime.now(),
+                    new HashSet<>()
+                )
+            )
+        );
+
+        linkRepository.saveAll(links);
+
+        Collection<LinkEntity> oldLinks =
+            linkRepository.findLinksNotCheckedSince(OffsetDateTime.now().minusMinutes(minutes));
+
+        Assertions.assertEquals(expectedCollectionSize, oldLinks.size());
+        for (LinkEntity link : oldLinks) {
+            Assertions.assertEquals(expectedUrl, link.getUrl());
+            Assertions.assertEquals(expectedLastCheckTime, link.getCheckedAt());
         }
     }
 
