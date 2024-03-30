@@ -1,4 +1,4 @@
-package edu.java.scrapper.configuration.domain_config;
+package edu.java.scrapper.configuration.domain;
 
 import edu.java.scrapper.domain.repository.jooq.JooqChatRepository;
 import edu.java.scrapper.domain.repository.jooq.JooqLinkRepository;
