@@ -33,7 +33,7 @@ public class JooqCodegen {
             .withPojos(true);
 
         Target target = new Target()
-            .withPackageName("edu.java.scrapper.domain.jooq_generated")
+            .withPackageName("edu.java.scrapper.domain.generated")
             .withDirectory("scrapper/src/main/java");
 
         Configuration configuration = new Configuration()

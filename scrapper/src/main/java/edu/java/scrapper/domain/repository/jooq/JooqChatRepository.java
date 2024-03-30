@@ -7,7 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.jooq.DSLContext;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
-import static edu.java.scrapper.domain.jooq_generated.Tables.CHATS;
+import static edu.java.scrapper.domain.generated.Tables.CHATS;
 
 @Repository
 @RequiredArgsConstructor

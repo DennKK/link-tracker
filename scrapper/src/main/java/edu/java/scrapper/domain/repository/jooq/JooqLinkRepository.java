@@ -10,9 +10,9 @@ import org.jooq.DSLContext;
 import org.jooq.Record;
 import org.jooq.Result;
 import org.springframework.stereotype.Repository;
-import static edu.java.scrapper.domain.jooq_generated.Tables.CHATS;
-import static edu.java.scrapper.domain.jooq_generated.Tables.LINKS;
-import static edu.java.scrapper.domain.jooq_generated.Tables.LINKS_TO_CHATS;
+import static edu.java.scrapper.domain.generated.Tables.CHATS;
+import static edu.java.scrapper.domain.generated.Tables.LINKS;
+import static edu.java.scrapper.domain.generated.Tables.LINKS_TO_CHATS;
 
 @Repository
 @RequiredArgsConstructor
