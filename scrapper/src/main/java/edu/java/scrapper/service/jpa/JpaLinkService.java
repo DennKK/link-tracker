@@ -9,6 +9,7 @@ import edu.java.scrapper.domain.repository.jpa.JpaLinkRepository;
 import edu.java.scrapper.service.LinkService;
 import edu.java.scrapper.service.factory.ChatFactory;
 import edu.java.scrapper.service.factory.LinkFactory;
+import jakarta.transaction.Transactional;
 import java.net.URI;
 import java.time.OffsetDateTime;
 import java.util.Collection;
@@ -91,6 +92,7 @@ public class JpaLinkService implements LinkService {
         jpaLinkRepository.save(linkEntity);
     }
 
+    @Transactional
     @Override
     public Collection<ChatDto> getChatsForLink(LinkDto link) {
         LinkEntity linkEntity =
