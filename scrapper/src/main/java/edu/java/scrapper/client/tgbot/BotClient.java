@@ -22,7 +22,8 @@ public class BotClient {
 
     public void sendUpdateToBot(LinkDto link, List<Long> chatIds) {
         log.info("Sending update to bot for Link ID: {}, URL: {}", link.getLinkId(), link.getUrl());
-        LinkUpdateRequest request = new LinkUpdateRequest(link.getLinkId(), link.getUrl(), "New update", chatIds);
+        LinkUpdateRequest request = new LinkUpdateRequest(link.getLinkId(), link.getUrl(), "\n" +
+            "The link has a new activity!", chatIds);
         update(request);
     }
 
