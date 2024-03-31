@@ -49,7 +49,7 @@ public class GitHubLinkUpdateProcessor implements LinkUpdateProcessor {
                 log.info("No activity for link: {}", link.getUrl());
             }
         } catch (Exception e) {
-            log.error("Error updating link " + link.getUrl(), e); // Предоставит stack trace
+            log.error("Error updating link " + link.getUrl(), e);
         }
     }
 
