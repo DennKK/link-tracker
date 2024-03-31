@@ -2,9 +2,9 @@ app:
   scheduler:
     enable: true
     interval: 10s
-    force-check-delay: 10s
+    force-check-delay: 10000
   access-type: jpa
-  update-frequency: 1
+  update-frequency: 10
 
 spring:
   liquibase:
