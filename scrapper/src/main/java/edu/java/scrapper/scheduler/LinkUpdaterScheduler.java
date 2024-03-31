@@ -30,7 +30,7 @@ public class LinkUpdaterScheduler implements LinkUpdater {
         Collection<LinkDto> oldLinks = linkService.getOlderThan(updateFrequency);
         log.info("Old links size: " + oldLinks.size());
         log.info("Processors size: " + processors.size());
-        if (oldLinks.size() != 0) {
+        if (!oldLinks.isEmpty()) {
             oldLinks.forEach(link -> {
                 try {
                     LinkUpdateProcessor processor = processors.stream()
