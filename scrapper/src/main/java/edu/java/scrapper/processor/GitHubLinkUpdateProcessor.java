@@ -1,8 +1,8 @@
-package edu.java.processor;
+package edu.java.scrapper.processor;
 
-import edu.java.client.github.GitHubClient;
-import edu.java.client.github.GitHubResponse;
-import edu.java.client.tgbot.BotClient;
+import edu.java.scrapper.client.github.GitHubClient;
+import edu.java.scrapper.client.github.GitHubResponse;
+import edu.java.scrapper.client.tgbot.BotClient;
 import edu.java.scrapper.domain.dto.ChatDto;
 import edu.java.scrapper.domain.dto.LinkDto;
 import edu.java.scrapper.service.LinkService;
@@ -49,7 +49,7 @@ public class GitHubLinkUpdateProcessor implements LinkUpdateProcessor {
                 log.info("No activity for link: {}", link.getUrl());
             }
         } catch (Exception e) {
-            log.error("Error updating link {}: {}", link.getUrl(), e.getMessage());
+            log.error("Error updating link " + link.getUrl(), e); // Предоставит stack trace
         }
     }
 
@@ -62,7 +62,7 @@ public class GitHubLinkUpdateProcessor implements LinkUpdateProcessor {
         link.setCheckedAt(OffsetDateTime.now());
         link.setUpdatedAt(lastActivityTime);
         linkService.updateLastCheckTime(link);
-        linkService.updateLastCheckTime(link);
+        linkService.refreshLinkActivity(link);
     }
 
     private void notifySubscribers(LinkDto link) {

@@ -1,9 +1,7 @@
-package edu.java.processor;
+package edu.java.scrapper.processor;
 
 import edu.java.scrapper.domain.dto.LinkDto;
-import org.springframework.stereotype.Component;
 
-@Component
 public class StackoverflowLinkUpdateProcessor implements LinkUpdateProcessor {
     @Override
     public boolean supports(String url) {

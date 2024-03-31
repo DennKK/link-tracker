@@ -1,4 +1,4 @@
-package edu.java.client.github;
+package edu.java.scrapper.client.github;
 
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;

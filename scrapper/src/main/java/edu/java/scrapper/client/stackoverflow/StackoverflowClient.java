@@ -1,4 +1,4 @@
-package edu.java.client.stackoverflow;
+package edu.java.scrapper.client.stackoverflow;
 
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.web.reactive.function.client.WebClient;

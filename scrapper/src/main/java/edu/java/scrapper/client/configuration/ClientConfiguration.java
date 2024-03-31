@@ -1,17 +1,20 @@
-package edu.java.client.configuration;
+package edu.java.scrapper.client.configuration;
 
+import edu.java.scrapper.client.tgbot.BotClient;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.reactive.function.client.WebClient;
 
+@Validated
 @Configuration
 public class ClientConfiguration {
     @Value("${clients.base-url.github:https://api.github.com}")
     private String gitHubBaseUrl;
     @Value("${clients.base-url.stackoverflow:https://api.stackexchange.com/2.3}")
     private String stackoverflowBaseUrl;
-    @Value("${clients.base-url.bot:http://localhost:8080}")
+    @Value("${clients.base-url.bot:http://localhost:8090}")
     private String botBaseUrl;
 
     @Bean("gitHubWebClient")
@@ -30,8 +33,8 @@ public class ClientConfiguration {
             .build();
     }
 
-    @Bean("telegramBotClient")
-    public WebClient getBotClient() {
-        return WebClient.builder().baseUrl(botBaseUrl).build();
+    @Bean
+    public BotClient getBotClient() {
+        return new BotClient(botBaseUrl);
     }
 }

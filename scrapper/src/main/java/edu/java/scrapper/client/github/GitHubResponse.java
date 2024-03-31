@@ -1,4 +1,4 @@
-package edu.java.client.github;
+package edu.java.scrapper.client.github;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
