@@ -15,7 +15,6 @@ import reactor.core.publisher.Mono;
 
 public class ScrapperClient {
     private final WebClient webClient;
-
     private static final String LINKS_PATH = "/links";
     private static final String TG_CHAT_ID_HEADER = "Tg-Chat-Id";
     private static final String TG_CHAT_PATH = "/tg-chat/{id}";
