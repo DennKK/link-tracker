@@ -1,6 +1,7 @@
 package edu.java.scrapper.client.configuration;
 
 import edu.java.scrapper.client.tgbot.BotClient;
+import edu.java.scrapper.retrier.strategy.RetryStrategy;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -34,7 +35,7 @@ public class ClientConfiguration {
     }
 
     @Bean
-    public BotClient getBotClient() {
-        return new BotClient(botBaseUrl);
+    public BotClient getBotClient(RetryStrategy retryStrategy) {
+        return new BotClient(botBaseUrl, retryStrategy);
     }
 }
