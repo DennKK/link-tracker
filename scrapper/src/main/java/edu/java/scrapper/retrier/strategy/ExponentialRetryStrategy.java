@@ -3,9 +3,11 @@ package edu.java.scrapper.retrier.strategy;
 import java.time.Duration;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
 import reactor.util.retry.Retry;
 
+@Slf4j
 @RequiredArgsConstructor
 public class ExponentialRetryStrategy implements RetryStrategy {
     private final int attempts;
@@ -20,12 +22,18 @@ public class ExponentialRetryStrategy implements RetryStrategy {
             .maxBackoff(maxBackoff)
             .jitter(jitter)
             .filter(this::shouldRetryOnStatusCode)
-            .doBeforeRetry(retrySignal -> System.out.println("Retry due to response with code " +
-                ((WebClientResponseException) retrySignal.failure()).getStatusCode()));
+            .doBeforeRetry(retrySignal -> {
+                WebClientResponseException exception = (WebClientResponseException) retrySignal.failure();
+                log.warn(
+                    "Retry attempt {} due to response with code {}",
+                    retrySignal.totalRetries(),
+                    exception.getStatusCode()
+                );
+            });
     }
 
     private boolean shouldRetryOnStatusCode(Throwable throwable) {
-        return throwable instanceof WebClientResponseException &&
-            retryStatusCodes.contains(((WebClientResponseException) throwable).getStatusCode().value());
+        return throwable instanceof WebClientResponseException
+            && retryStatusCodes.contains(((WebClientResponseException) throwable).getStatusCode().value());
     }
 }
