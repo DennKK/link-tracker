@@ -6,6 +6,26 @@ app:
   access-type: jpa
   update-frequency: 10
 
+  retry:
+    enable: true
+    policy: exponential
+    status-codes: [ 500, 502, 503, 504 ]
+
+    linear:
+      attempts: 5
+      initial-backoff: 1s
+      max-backoff: 10s
+
+    constant:
+      attempts: 3
+      backoff: 5s
+
+    exponential:
+      attempts: 3
+      initial-backoff: 1s
+      max-backoff: 20s
+      jitter: 0.5
+
 spring:
   liquibase:
     enabled: false
