@@ -7,9 +7,9 @@ app:
   update-frequency: 10
 
   retry:
+    status-codes: 500, 502, 503, 504
     enable: true
     policy: exponential
-    status-codes: [ 500, 502, 503, 504 ]
 
     linear:
       attempts: 5
