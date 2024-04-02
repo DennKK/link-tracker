@@ -1,12 +1,12 @@
 package edu.java.bot.client;
 
 import edu.java.bot.client.exception.ScrapperClientException;
-import edu.java.bot.retrier.strategy.RetryStrategy;
 import edu.java.payload.dto.request.AddLinkRequest;
 import edu.java.payload.dto.request.RemoveLinkRequest;
 import edu.java.payload.dto.response.ApiErrorResponse;
 import edu.java.payload.dto.response.LinkResponse;
 import edu.java.payload.dto.response.ListLinksResponse;
+import edu.java.retry.strategy.RetryStrategy;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatusCode;

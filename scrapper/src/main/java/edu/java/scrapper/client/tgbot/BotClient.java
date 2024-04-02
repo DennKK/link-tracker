@@ -2,9 +2,9 @@ package edu.java.scrapper.client.tgbot;
 
 import edu.java.payload.dto.request.LinkUpdateRequest;
 import edu.java.payload.dto.response.ApiErrorResponse;
+import edu.java.retry.strategy.RetryStrategy;
 import edu.java.scrapper.client.exception.BotClientException;
 import edu.java.scrapper.domain.dto.LinkDto;
-import edu.java.scrapper.retrier.strategy.RetryStrategy;
 import jakarta.validation.constraints.NotNull;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;

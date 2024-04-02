@@ -1,7 +1,7 @@
 package edu.java.scrapper.client.configuration;
 
+import edu.java.retry.strategy.RetryStrategy;
 import edu.java.scrapper.client.tgbot.BotClient;
-import edu.java.scrapper.retrier.strategy.RetryStrategy;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

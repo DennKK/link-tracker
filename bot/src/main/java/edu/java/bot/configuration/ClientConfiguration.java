@@ -1,7 +1,7 @@
 package edu.java.bot.configuration;
 
 import edu.java.bot.client.ScrapperClient;
-import edu.java.bot.retrier.strategy.RetryStrategy;
+import edu.java.retry.strategy.RetryStrategy;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
