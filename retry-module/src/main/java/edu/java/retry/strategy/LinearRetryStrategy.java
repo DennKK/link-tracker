@@ -1,4 +1,4 @@
-package edu.java.bot.retrier.strategy;
+package edu.java.retry.strategy;
 
 import java.time.Duration;
 import java.util.List;
@@ -9,14 +9,16 @@ import reactor.util.retry.Retry;
 
 @Slf4j
 @RequiredArgsConstructor
-public class ConstantRetryStrategy implements RetryStrategy {
+public class LinearRetryStrategy implements RetryStrategy {
     private final int attempts;
-    private final Duration backoff;
+    private final Duration initialBackoff;
+    private final Duration maxBackoff;
     private final List<Integer> retryStatusCodes;
 
     @Override
     public Retry getRetryPolicy() {
-        return Retry.fixedDelay(attempts, backoff)
+        return Retry.backoff(attempts, initialBackoff)
+            .maxBackoff(maxBackoff)
             .filter(this::shouldRetryOnStatusCode)
             .doBeforeRetry(retrySignal -> {
                 WebClientResponseException exception = (WebClientResponseException) retrySignal.failure();

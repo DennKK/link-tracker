@@ -1,4 +1,4 @@
-package edu.java.bot.retrier.strategy;
+package edu.java.retry.strategy;
 
 import reactor.util.retry.Retry;
 
