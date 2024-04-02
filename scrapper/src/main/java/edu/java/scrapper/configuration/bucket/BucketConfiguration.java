@@ -20,5 +20,4 @@ public class BucketConfiguration implements WebMvcConfigurer {
             .addPathPatterns("/links")
             .addPathPatterns("/tg-chat/{id}");
     }
-
 }
