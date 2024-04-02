@@ -8,6 +8,7 @@ app:
 
   rate_limit: 3
   time_duration: 1
+  nano_in_seconds: 1_000_000_000
 
   retry:
     status-codes: 500, 502, 503, 504
