@@ -20,6 +20,12 @@
         </dependency>
 
         <dependency>
+            <groupId>edu.java</groupId>
+            <artifactId>retry-module</artifactId>
+            <version>${revision}</version>
+        </dependency>
+
+        <dependency>
             <groupId>io.projectreactor</groupId>
             <artifactId>reactor-core</artifactId>
             <version>3.6.4</version>
