@@ -1,12 +1,11 @@
 package edu.java.bot.retrier.strategy;
 
+import java.time.Duration;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
 import reactor.util.retry.Retry;
-
-import java.time.Duration;
-import java.util.List;
 
 @Slf4j
 @RequiredArgsConstructor
