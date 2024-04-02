@@ -1,6 +1,7 @@
 package edu.java.bot.client;
 
 import edu.java.bot.client.exception.ScrapperClientException;
+import edu.java.bot.retrier.strategy.RetryStrategy;
 import edu.java.payload.dto.request.AddLinkRequest;
 import edu.java.payload.dto.request.RemoveLinkRequest;
 import edu.java.payload.dto.response.ApiErrorResponse;
@@ -18,9 +19,11 @@ public class ScrapperClient {
     private static final String LINKS_PATH = "/links";
     private static final String TG_CHAT_ID_HEADER = "Tg-Chat-Id";
     private static final String TG_CHAT_PATH = "/tg-chat/{id}";
+    private final RetryStrategy retryStrategy;
 
-    public ScrapperClient(@NotNull String baseUrl) {
-        webClient = WebClient.builder().baseUrl(baseUrl).build();
+    public ScrapperClient(@NotNull String baseUrl, RetryStrategy retryStrategy) {
+        this.webClient = WebClient.builder().baseUrl(baseUrl).build();
+        this.retryStrategy = retryStrategy;
     }
 
     public void addChat(Long id) {
@@ -29,6 +32,7 @@ public class ScrapperClient {
             .onStatus(HttpStatusCode::isError, response -> response.bodyToMono(ApiErrorResponse.class)
                 .flatMap(error -> Mono.error(new ScrapperClientException(error.exceptionMessage()))))
             .bodyToMono(Void.class)
+            .retryWhen(retryStrategy.getRetryPolicy())
             .block();
     }
 
@@ -60,6 +64,7 @@ public class ScrapperClient {
             .onStatus(HttpStatusCode::isError, response -> response.bodyToMono(ApiErrorResponse.class)
                 .flatMap(error -> Mono.error(new ScrapperClientException(error.exceptionMessage()))))
             .bodyToMono(LinkResponse.class)
+            .retryWhen(retryStrategy.getRetryPolicy())
             .block();
     }
 
@@ -72,6 +77,7 @@ public class ScrapperClient {
             .onStatus(HttpStatusCode::isError, response -> response.bodyToMono(ApiErrorResponse.class)
                 .flatMap(error -> Mono.error(new ScrapperClientException(error.exceptionMessage()))))
             .bodyToMono(LinkResponse.class)
+            .retryWhen(retryStrategy.getRetryPolicy())
             .block();
     }
 }
