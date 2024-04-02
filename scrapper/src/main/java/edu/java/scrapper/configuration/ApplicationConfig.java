@@ -16,7 +16,13 @@ public record ApplicationConfig(
     @NotNull
     Scheduler scheduler,
     @NotNull
-    RetryConfig retry
+    RetryConfig retry,
+    @NotNull
+    int rateLimit,
+    @NotNull
+    int timeDuration,
+    @NotNull
+    long nanoInSeconds
 ) {
     public record Scheduler(boolean enable, @NotNull Duration interval, @NotNull Duration forceCheckDelay) {
     }
