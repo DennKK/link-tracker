@@ -1,7 +1,7 @@
 package edu.java.scrapper.configuration.retry;
 
-import edu.java.scrapper.retrier.strategy.LinearRetryStrategy;
-import edu.java.scrapper.retrier.strategy.RetryStrategy;
+import edu.java.retry.strategy.LinearRetryStrategy;
+import edu.java.retry.strategy.RetryStrategy;
 import java.time.Duration;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Value;

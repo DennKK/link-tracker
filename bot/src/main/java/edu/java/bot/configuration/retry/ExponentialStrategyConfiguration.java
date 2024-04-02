@@ -1,7 +1,7 @@
 package edu.java.bot.configuration.retry;
 
-import edu.java.bot.retrier.strategy.ExponentialRetryStrategy;
-import edu.java.bot.retrier.strategy.RetryStrategy;
+import edu.java.retry.strategy.ExponentialRetryStrategy;
+import edu.java.retry.strategy.RetryStrategy;
 import java.time.Duration;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Value;
