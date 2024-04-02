@@ -1,0 +1,40 @@
+package edu.java.bot.retrier.strategy;
+
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.web.reactive.function.client.WebClientResponseException;
+import reactor.util.retry.Retry;
+
+import java.time.Duration;
+import java.util.List;
+
+@Slf4j
+@RequiredArgsConstructor
+public class ExponentialRetryStrategy implements RetryStrategy {
+    private final int attempts;
+    private final Duration initialBackoff;
+    private final Duration maxBackoff;
+    private final double jitter;
+    private final List<Integer> retryStatusCodes;
+
+    @Override
+    public Retry getRetryPolicy() {
+        return Retry.backoff(attempts, initialBackoff)
+            .maxBackoff(maxBackoff)
+            .jitter(jitter)
+            .filter(this::shouldRetryOnStatusCode)
+            .doBeforeRetry(retrySignal -> {
+                WebClientResponseException exception = (WebClientResponseException) retrySignal.failure();
+                log.warn(
+                    "Retry attempt {} due to response with code {}",
+                    retrySignal.totalRetries(),
+                    exception.getStatusCode()
+                );
+            });
+    }
+
+    private boolean shouldRetryOnStatusCode(Throwable throwable) {
+        return throwable instanceof WebClientResponseException
+            && retryStatusCodes.contains(((WebClientResponseException) throwable).getStatusCode().value());
+    }
+}
