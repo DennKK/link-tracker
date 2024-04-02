@@ -50,6 +50,7 @@
         <module>scrapper</module>
         <module>payload</module>
         <module>scrapper-jooq</module>
+        <module>retry-module</module>
     </modules>
 
     <dependencyManagement>
