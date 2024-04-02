@@ -6,6 +6,9 @@ app:
   access-type: jpa
   update-frequency: 10
 
+  rate_limit: 3
+  time_duration: 1
+
   retry:
     status-codes: 500, 502, 503, 504
     enable: true
