@@ -2,7 +2,7 @@ app:
   scheduler:
     enable: true
     interval: 10s
-    force-check-delay: 900_000 # 15 min
+    force-check-delay: 900000 # 15 min
   access-type: jpa
   update-frequency: 10
 
@@ -29,6 +29,27 @@ app:
       initial-backoff: 1s
       max-backoff: 20s
       jitter: 0.5
+
+  kafka:
+    consumer:
+      bootstrap-servers: localhost:29091,localhost:29092,localhost:29093
+      group-id: scrapper-group
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.IntegerDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+
+    producer:
+      bootstrap-servers: localhost:29091,localhost:29092,localhost:29093
+      key-serializer: org.apache.kafka.common.serialization.IntegerSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+      acks: all
+      linger-ms: 10
+      retries: 3
+      max-in-flight-requests-per-connection: 1
+      enable-idempotence: true
+
+    topic:
+      name: link-updates
 
 spring:
   liquibase:
