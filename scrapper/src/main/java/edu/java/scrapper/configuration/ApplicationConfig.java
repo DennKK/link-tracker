@@ -22,7 +22,9 @@ public record ApplicationConfig(
     @NotNull
     int timeDuration,
     @NotNull
-    long nanoInSeconds
+    long nanoInSeconds,
+    @NotNull
+    KafkaConfig kafka
 ) {
     public record Scheduler(boolean enable, @NotNull Duration interval, @NotNull Duration forceCheckDelay) {
     }
@@ -46,5 +48,38 @@ public record ApplicationConfig(
 
     public record Exponential(@NotNull int attempts, @NotNull Duration initialBackoff, @NotNull Duration maxBackoff,
                               @NotNull double jitter) {
+    }
+
+    public record KafkaConfig(
+        @NotNull KafkaProducer producer,
+        @NotNull KafkaConsumer consumer,
+        @NotNull Topic topic
+    ) {
+    }
+
+    public record KafkaProducer(
+        @NotNull String bootstrapServers,
+        @NotNull String keySerializer,
+        @NotNull String valueSerializer,
+        @NotNull String acks,
+        @NotNull int lingerMs,
+        @NotNull int retries,
+        @NotNull int maxInFlightRequestsPerConnection,
+        @NotNull boolean enableIdempotence
+    ) {
+    }
+
+    public record KafkaConsumer(
+        @NotNull String bootstrapServers,
+        @NotNull String groupId,
+        @NotNull String keyDeserializer,
+        @NotNull String valueDeserializer,
+        @NotNull String autoOffsetReset
+    ) {
+    }
+
+    public record Topic(
+        @NotNull String name
+    ) {
     }
 }
