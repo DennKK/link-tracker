@@ -1,4 +1,4 @@
-package edu.java.scrapper.configuration.retry;
+package edu.java.scrapper.configuration.retry.strategy;
 
 import edu.java.retry.strategy.ConstantRetryStrategy;
 import edu.java.retry.strategy.RetryStrategy;
