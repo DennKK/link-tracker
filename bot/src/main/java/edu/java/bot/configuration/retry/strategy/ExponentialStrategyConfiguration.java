@@ -1,4 +1,4 @@
-package edu.java.bot.configuration.retry;
+package edu.java.bot.configuration.retry.strategy;
 
 import edu.java.retry.strategy.ExponentialRetryStrategy;
 import edu.java.retry.strategy.RetryStrategy;
