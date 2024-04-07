@@ -5,6 +5,7 @@ app:
     force-check-delay: 900000 # 15 min
   access-type: jpa
   update-frequency: 10
+  useQueue: true
 
   rate_limit: 3
   time_duration: 1
@@ -31,17 +32,17 @@ app:
       jitter: 0.5
 
   kafka:
+    bootstrap-servers: localhost:29091,localhost:29092,localhost:29093
+
     consumer:
-      bootstrap-servers: localhost:29091,localhost:29092,localhost:29093
       group-id: scrapper-group
       auto-offset-reset: earliest
-      key-deserializer: org.apache.kafka.common.serialization.IntegerDeserializer
-      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
 
     producer:
-      bootstrap-servers: localhost:29091,localhost:29092,localhost:29093
-      key-serializer: org.apache.kafka.common.serialization.IntegerSerializer
-      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
       acks: all
       linger-ms: 10
       retries: 3
@@ -50,6 +51,8 @@ app:
 
     topic:
       name: link-updates
+      partitions: 3
+      replicas: 3
 
 spring:
   liquibase:
