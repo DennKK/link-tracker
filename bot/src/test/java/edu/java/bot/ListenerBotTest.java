@@ -48,10 +48,10 @@ public class ListenerBotTest {
         List<Command> commands =
             List.of(
                 new StartCommand(null),
-                new UntrackCommand(),
+                new UntrackCommand(null),
                 new HelpCommand(List.of(
                     new StartCommand(null),
-                    new UntrackCommand()
+                    new UntrackCommand(null)
                 ))
             );
 
