@@ -14,6 +14,8 @@ public record ApplicationConfig(
     @NotNull
     AccessType accessType,
     @NotNull
+    boolean useQueue,
+    @NotNull
     Scheduler scheduler,
     @NotNull
     RetryConfig retry,
@@ -53,12 +55,12 @@ public record ApplicationConfig(
     public record KafkaConfig(
         @NotNull KafkaProducer producer,
         @NotNull KafkaConsumer consumer,
-        @NotNull Topic topic
+        @NotNull Topic topic,
+        @NotNull String bootstrapServers
     ) {
     }
 
     public record KafkaProducer(
-        @NotNull String bootstrapServers,
         @NotNull String keySerializer,
         @NotNull String valueSerializer,
         @NotNull String acks,
@@ -70,7 +72,6 @@ public record ApplicationConfig(
     }
 
     public record KafkaConsumer(
-        @NotNull String bootstrapServers,
         @NotNull String groupId,
         @NotNull String keyDeserializer,
         @NotNull String valueDeserializer,
@@ -79,7 +80,9 @@ public record ApplicationConfig(
     }
 
     public record Topic(
-        @NotNull String name
+        @NotNull String name,
+        @NotNull Integer partitions,
+        @NotNull Integer replicas
     ) {
     }
 }
