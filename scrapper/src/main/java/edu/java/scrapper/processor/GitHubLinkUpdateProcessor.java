@@ -6,7 +6,7 @@ import edu.java.scrapper.client.github.GitHubResponse;
 import edu.java.scrapper.domain.dto.ChatDto;
 import edu.java.scrapper.domain.dto.LinkDto;
 import edu.java.scrapper.service.LinkService;
-import edu.java.scrapper.service.notification.NotificationService;
+import edu.java.scrapper.service.notification.NotificationSenderService;
 import java.time.OffsetDateTime;
 import java.util.Collection;
 import java.util.List;
@@ -20,7 +20,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class GitHubLinkUpdateProcessor implements LinkUpdateProcessor {
     private final GitHubClient gitHubClient;
-    private final NotificationService notificationService;
+    private final NotificationSenderService notificationService;
     private final LinkService linkService;
 
     @Override
@@ -50,7 +50,7 @@ public class GitHubLinkUpdateProcessor implements LinkUpdateProcessor {
                 log.info("No activity for link: {}", link.getUrl());
             }
         } catch (Exception e) {
-            log.error("Error updating link " + link.getUrl(), e);
+            log.error("Error updating link {}", link.getUrl(), e);
         }
     }
 
