@@ -8,6 +8,7 @@ import com.pengrad.telegrambot.request.SendMessage;
 import com.pengrad.telegrambot.request.SetMyCommands;
 import edu.java.bot.command.Command;
 import edu.java.bot.message.MessageProcessor;
+import edu.java.payload.dto.request.LinkUpdateRequest;
 import java.util.List;
 import org.springframework.stereotype.Service;
 
@@ -47,7 +48,11 @@ public class ListenerBot implements Bot {
         return messageProcessor.process(update);
     }
 
-    public void updateRequest(List<Long> chats, String link, String description) {
+    public void updateRequest(LinkUpdateRequest updateRequest) {
+        List<Long> chats = updateRequest.tgChatIds();
+        String link = updateRequest.url();
+        String description = updateRequest.description();
+
         for (Long chat : chats) {
             String message = "New update for " + link + ":\n" + description;
             SendMessage sendMessage = new SendMessage(chat, message);
