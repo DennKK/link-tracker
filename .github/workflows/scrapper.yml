@@ -26,6 +26,12 @@ jobs:
       - name: maven build
         run: mvn -pl scrapper -am package
 
+      - name: set lower case owner name
+        run: |
+          echo "OWNER_LC=${OWNER,,}" >>${GITHUB_ENV}
+        env:
+          OWNER: '${{ github.repository_owner }}'
+
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
@@ -36,7 +42,7 @@ jobs:
           file: ./scrapper.Dockerfile
           platforms: linux/amd64
           push: true
-          tags: ghcr.io/${{ github.repository | lower }}/scrapper:latest
+          tags: ghcr.io/${{ OWNER_LC }}/scrapper:latest
 
       - id: jacoco
         uses: madrapps/jacoco-report@v1.6.1
