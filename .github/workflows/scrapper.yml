@@ -33,10 +33,10 @@ jobs:
         uses: docker/build-push-action@v5.3.0
         with:
           context: .
-          file: ./bot.Dockerfile
+          file: ./scrapper.Dockerfile
           platforms: linux/amd64
           push: true
-          tags: ghcr.io/${{ github.repository }}/bot:latest
+          tags: ghcr.io/${{ github.repository }}/scrapper:latest
 
       - id: jacoco
         uses: madrapps/jacoco-report@v1.6.1
