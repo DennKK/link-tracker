@@ -180,7 +180,7 @@
                         </goals>
                         <phase>package</phase>
                         <configuration>
-                            <dockerfile>${project.basedir}/bot.Dockerfile</dockerfile>
+                            <dockerfile>${project.basedir}/Dockerfile</dockerfile>
                             <tag>bot:${project.version}</tag>
                         </configuration>
                     </execution>
