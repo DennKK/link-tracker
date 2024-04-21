@@ -42,7 +42,7 @@ jobs:
           file: ./scrapper.Dockerfile
           platforms: linux/amd64
           push: true
-          tags: ghcr.io/${{ OWNER_LC }}/scrapper:latest
+          tags: ghcr.io/OWNER_LC/scrapper:latest
 
       - id: jacoco
         uses: madrapps/jacoco-report@v1.6.1
