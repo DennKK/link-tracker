@@ -1,7 +1,7 @@
 FROM eclipse-temurin:21
 
-WORKDIR /app
+VOLUME ./target/bot.jar bot.jar
 
-COPY target/bot.jar /app
+ENV TELEGRAM-TOKEN ${TELEGRAM-TOKEN}
 
 CMD ["java", "-jar", "bot.jar"]
