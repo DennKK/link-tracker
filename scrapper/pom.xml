@@ -201,7 +201,7 @@
                         </goals>
                         <phase>package</phase>
                         <configuration>
-                            <dockerfile>${project.basedir}/scrapper/Dockerfile</dockerfile>
+                            <dockerfile>${project.basedir}/Dockerfile</dockerfile>
                             <tag>scrapper:${project.version}</tag>
                         </configuration>
                     </execution>
