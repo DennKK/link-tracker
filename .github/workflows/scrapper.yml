@@ -36,7 +36,7 @@ jobs:
           file: ./scrapper/Dockerfile
           push: true
           tags: |
-            ghcr.io/${{ github.repository_owner }}/scrapper:latest
+            ghcr.io/${{ github.repository }}/scrapper:latest
           labels: |
             org.opencontainers.image.source=https://github.com/${{ github.repository }}/Dockerfile
 
