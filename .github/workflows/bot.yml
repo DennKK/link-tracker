@@ -47,7 +47,7 @@ jobs:
           file: ./bot/Dockerfile
           platforms: linux/amd64
           push: true
-          tags: ghcr.io/${{ env.USERNAME_LOWER }}/bot:latest
+          tags: ghcr.io/${{ env.USERNAME_LOWER }}/${{ github.event.repository.name }}/bot:latest
 
       - id: jacoco
         uses: madrapps/jacoco-report@v1.6.1
