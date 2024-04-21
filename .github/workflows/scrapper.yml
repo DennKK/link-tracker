@@ -37,7 +37,7 @@ jobs:
         uses: docker/build-push-action@v5.3.0
         with:
           context: .
-          file: ./scrapper.Dockerfile
+          file: ./scrapper/Dockerfile
           platforms: linux/amd64
           push: true
           tags: ghcr.io/${{ env.USERNAME_LOWER }}/${{ github.event.repository.name }}/scrapper:latest
