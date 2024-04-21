@@ -1,7 +1,5 @@
-FROM eclipse-temurin:21
+FROM openjdk:21-jdk-slim
 
-WORKDIR /app
+VOLUME ./target/scrapper.jar scrapper.jar
 
-COPY target/scrapper.jar /app
-
-CMD ["java", "-jar", "scrapper.jar"]
+ENTRYPOINT ["java","-jar","scrapper.jar"]
