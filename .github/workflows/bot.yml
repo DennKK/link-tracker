@@ -24,7 +24,7 @@ jobs:
           cache: maven
 
       - name: maven build
-        run: mvn -pl scrapper -am package
+        run: mvn -pl bot -am package
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
