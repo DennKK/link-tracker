@@ -4,9 +4,7 @@ import edu.java.payload.dto.request.LinkUpdateRequest;
 import edu.java.payload.dto.response.ApiErrorResponse;
 import edu.java.retry.strategy.RetryStrategy;
 import edu.java.scrapper.client.exception.BotClientException;
-import edu.java.scrapper.domain.dto.LinkDto;
 import jakarta.validation.constraints.NotNull;
-import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.web.reactive.function.BodyInserters;
@@ -23,14 +21,7 @@ public class BotClient {
         this.retryStrategy = retryStrategy;
     }
 
-    public void sendUpdateToBot(LinkDto link, List<Long> chatIds) {
-        log.info("Sending update to bot for Link ID: {}, URL: {}", link.getLinkId(), link.getUrl());
-        LinkUpdateRequest request = new LinkUpdateRequest(link.getLinkId(), link.getUrl(), "\n"
-            + "The link has a new activity!", chatIds);
-        update(request);
-    }
-
-    public void update(LinkUpdateRequest linkUpdateRequest) {
+    public void sendUpdateToBot(LinkUpdateRequest linkUpdateRequest) {
         log.info("Preparing to post update: {}", linkUpdateRequest);
         webClient.post().uri("/updates")
             .body(BodyInserters.fromValue(linkUpdateRequest))

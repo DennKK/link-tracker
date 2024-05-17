@@ -1,5 +1,6 @@
 package edu.java.bot.configuration;
 
+import edu.java.bot.configuration.kafka.property.KafkaPropertyConfig;
 import edu.java.bot.configuration.retry.RetryConfig;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
@@ -12,6 +13,8 @@ public record ApplicationConfig(
     @NotEmpty
     String telegramToken,
     @NotNull
-    RetryConfig retry
+    RetryConfig retry,
+    @NotNull
+    KafkaPropertyConfig kafka
 ) {
 }

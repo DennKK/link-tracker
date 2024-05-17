@@ -1,25 +1,26 @@
 package edu.java.scrapper.processor;
 
+import edu.java.payload.dto.request.LinkUpdateRequest;
 import edu.java.scrapper.client.github.GitHubClient;
 import edu.java.scrapper.client.github.GitHubResponse;
-import edu.java.scrapper.client.tgbot.BotClient;
 import edu.java.scrapper.domain.dto.ChatDto;
 import edu.java.scrapper.domain.dto.LinkDto;
 import edu.java.scrapper.service.LinkService;
+import edu.java.scrapper.service.notification.NotificationSenderService;
 import java.time.OffsetDateTime;
 import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 @Slf4j
-@Component
+@Service
 @RequiredArgsConstructor
 public class GitHubLinkUpdateProcessor implements LinkUpdateProcessor {
     private final GitHubClient gitHubClient;
-    private final BotClient botClient;
+    private final NotificationSenderService notificationService;
     private final LinkService linkService;
 
     @Override
@@ -49,7 +50,7 @@ public class GitHubLinkUpdateProcessor implements LinkUpdateProcessor {
                 log.info("No activity for link: {}", link.getUrl());
             }
         } catch (Exception e) {
-            log.error("Error updating link " + link.getUrl(), e);
+            log.error("Error updating link {}", link.getUrl(), e);
         }
     }
 
@@ -68,7 +69,10 @@ public class GitHubLinkUpdateProcessor implements LinkUpdateProcessor {
     private void notifySubscribers(LinkDto link) {
         Collection<ChatDto> chats = linkService.getChatsForLink(link);
         List<Long> tgChatIds = chats.stream().map(ChatDto::getTgChatId).collect(Collectors.toList());
-        botClient.sendUpdateToBot(link, tgChatIds);
+        LinkUpdateRequest updateRequest =
+            new LinkUpdateRequest(link.getLinkId(), link.getUrl(), "The link has a new activity!", tgChatIds);
+
+        notificationService.sendNotification(updateRequest);
     }
 
     private String[] parseGithubLink(String url) {
