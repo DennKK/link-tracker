@@ -8,19 +8,18 @@ import com.pengrad.telegrambot.request.SendMessage;
 import com.pengrad.telegrambot.request.SetMyCommands;
 import edu.java.bot.command.Command;
 import edu.java.bot.message.MessageProcessor;
+import edu.java.bot.metric.MessageCounter;
 import edu.java.payload.dto.request.LinkUpdateRequest;
 import java.util.List;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 @Service
+@RequiredArgsConstructor
 public class ListenerBot implements Bot {
     private final TelegramBot listenerBot;
     private final MessageProcessor messageProcessor;
-
-    public ListenerBot(TelegramBot listenerBot, MessageProcessor messageProcessor) {
-        this.listenerBot = listenerBot;
-        this.messageProcessor = messageProcessor;
-    }
+    private final MessageCounter messageCounter;
 
     public void createMenu() {
         List<? extends Command> commands = messageProcessor.commands();
@@ -36,6 +35,7 @@ public class ListenerBot implements Bot {
         createMenu();
         listenerBot.setUpdatesListener(updates -> {
             for (Update update : updates) {
+                messageCounter.increment();
                 listenerBot.execute(process(update));
             }
 
