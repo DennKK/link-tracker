@@ -3,6 +3,7 @@ package edu.java.scrapper.service.jdbc;
 import edu.java.scrapper.domain.dto.ChatDto;
 import edu.java.scrapper.domain.repository.jdbc.JdbcChatRepository;
 import edu.java.scrapper.service.ChatService;
+import java.time.OffsetDateTime;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -13,12 +14,12 @@ public class JdbcChatService implements ChatService {
 
     @Override
     public void register(long tgChatId) {
-        ChatDto chat = new ChatDto(tgChatId, null);
+        ChatDto chat = new ChatDto(null, tgChatId, OffsetDateTime.now());
         jdbcChatRepository.add(chat);
     }
 
     @Override
     public void unregister(long tgChatId) {
-        jdbcChatRepository.remove(new ChatDto(tgChatId, null));
+        jdbcChatRepository.remove(new ChatDto(null, tgChatId, null));
     }
 }

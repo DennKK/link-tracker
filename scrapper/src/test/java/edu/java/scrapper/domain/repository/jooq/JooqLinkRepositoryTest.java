@@ -1,7 +1,8 @@
-package edu.java.scrapper.domain.repository.jdbc;
+package edu.java.scrapper.domain.repository.jooq;
 
 import edu.java.scrapper.IntegrationEnvironment;
 import edu.java.scrapper.domain.dto.LinkDto;
+import edu.java.scrapper.domain.repository.jooq.config.JooqConfig;
 import java.time.OffsetDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
@@ -10,13 +11,15 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.Import;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 
 @SpringBootTest
-public class JdbcLinkRepositoryTest extends IntegrationEnvironment {
+@Import(JooqConfig.class)
+public class JooqLinkRepositoryTest extends IntegrationEnvironment {
     @Autowired
-    private JdbcLinkRepository linkRepository;
+    private JooqLinkRepository linkRepository;
 
     @Test
     @Transactional

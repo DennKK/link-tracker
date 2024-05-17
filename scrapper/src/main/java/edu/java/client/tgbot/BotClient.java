@@ -3,9 +3,7 @@ package edu.java.client.tgbot;
 import edu.java.client.exception.BotClientException;
 import edu.java.payload.dto.request.LinkUpdateRequest;
 import edu.java.payload.dto.response.ApiErrorResponse;
-import edu.java.scrapper.domain.dto.ChatDto;
 import edu.java.scrapper.domain.dto.LinkDto;
-import edu.java.scrapper.service.jdbc.JdbcLinkService;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatusCode;
@@ -17,17 +15,13 @@ import reactor.core.publisher.Mono;
 @Service
 public class BotClient {
     private final WebClient webClient;
-    private final JdbcLinkService jdbcLinkService;
 
-    public BotClient(@Qualifier("telegramBotClient") WebClient webClient, JdbcLinkService jdbcLinkService) {
+    public BotClient(@Qualifier("telegramBotClient") WebClient webClient) {
         this.webClient = webClient;
-        this.jdbcLinkService = jdbcLinkService;
     }
 
-    public void sendUpdateToBot(LinkDto link) {
-        List<Long> chats =
-            jdbcLinkService.getChatsForLink(link).stream().map(ChatDto::getChatId).toList();
-        LinkUpdateRequest request = new LinkUpdateRequest(link.getLinkId(), link.getUrl(), "New update", chats);
+    public void sendUpdateToBot(LinkDto link, List<Long> chatIds) {
+        LinkUpdateRequest request = new LinkUpdateRequest(link.getLinkId(), link.getUrl(), "New update", chatIds);
         update(request);
     }
 

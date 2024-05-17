@@ -5,4 +5,6 @@
     "https://checkstyle.org/dtds/suppressions_1_2.dtd">
 
 <suppressions>
+    <suppress files="scrapper-jooq[/\\]src[/\\]main[/\\]java[/\\]JooqCodegen\.java" checks=".*"/>
+    <suppress files="scrapper[/\\]src[/\\]main[/\\]java[/\\]edu[/\\]java[/\\]scrapper[/\\]domain[/\\]generated[/\\].*" checks=".*"/>
 </suppressions>

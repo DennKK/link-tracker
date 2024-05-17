@@ -2,9 +2,11 @@ package edu.java.scrapper.domain.repository.jdbc;
 
 import edu.java.scrapper.domain.dto.ChatDto;
 import edu.java.scrapper.domain.dto.LinkDto;
+import edu.java.scrapper.domain.repository.LinkRepository;
+import java.util.Collection;
 import java.util.List;
+import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.DataClassRowMapper;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -13,104 +15,121 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 @Repository
-public class JdbcLinkRepository {
+@RequiredArgsConstructor
+public class JdbcLinkRepository implements LinkRepository {
     private final NamedParameterJdbcTemplate jdbcTemplate;
     private final RowMapper<LinkDto> rowMapper = new DataClassRowMapper<>(LinkDto.class);
-    private final String linkId = "linkId";
-    private final String chatId = "chatId";
+    private final String linkIdTemplate = "link_id";
+    private final String chatIdTemplate = "chat_id";
 
-    public JdbcLinkRepository(JdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = new NamedParameterJdbcTemplate(jdbcTemplate);
-    }
-
+    @Override
     public Iterable<LinkDto> findAll() {
-        return jdbcTemplate.query("select * from links", rowMapper);
+        return jdbcTemplate.query("SELECT * FROM links", rowMapper);
     }
 
+    @Override
     @Transactional
     public void add(LinkDto link) {
         jdbcTemplate.update(
-            "insert into links(url, updated_at) values(:url, :updatedAt)",
+            "INSERT INTO links(url, checked_at, updated_at) VALUES(:url, :checkedAt, :updatedAt)",
             new BeanPropertySqlParameterSource(link)
         );
     }
 
+    @Override
     @Transactional
     public int remove(LinkDto link) {
         return jdbcTemplate.update(
-            "delete from links where link_id = :linkId",
-            new MapSqlParameterSource()
-                .addValue(linkId, link.getLinkId())
+            "DELETE FROM links WHERE link_id = :link_id",
+            new MapSqlParameterSource().addValue(linkIdTemplate, link.getLinkId())
         );
     }
 
+    @Override
     @Transactional
-    public void map(LinkDto link, ChatDto chat) {
+    public void map(Long linkId, Long chatId) {
         jdbcTemplate.update(
-            "insert into links_to_chats(chat_id, link_id) values(:chatId, :linkId)",
+            "INSERT INTO links_to_chats(chat_id, link_id) VALUES(:chat_id, :link_id)",
             new MapSqlParameterSource()
-                .addValue(linkId, link.getLinkId())
-                .addValue(chatId, chat.getChatId())
+                .addValue(linkIdTemplate, linkId)
+                .addValue(chatIdTemplate, chatId)
         );
     }
 
+    @Override
     @Transactional
-    public void unmap(LinkDto link, ChatDto chat) {
+    public void unmap(Long linkId, Long chatId) {
         jdbcTemplate.update(
-            "delete from links_to_chats where link_id = :linkId and chat_id = :chatId",
+            "DELETE FROM links_to_chats WHERE link_id = :link_id AND chat_id = :chat_id",
             new MapSqlParameterSource()
-                .addValue(linkId, link.getLinkId())
-                .addValue(chatId, chat.getChatId())
+                .addValue(linkIdTemplate, linkId)
+                .addValue(chatIdTemplate, chatId)
         );
     }
 
+    @Override
     @Transactional
     public LinkDto getByUrl(String url) {
         List<LinkDto> links = jdbcTemplate.query(
-            "select * from links where link = :link",
-            new MapSqlParameterSource().addValue("link", url),
+            "SELECT * FROM links WHERE url = :url",
+            new MapSqlParameterSource().addValue("url", url),
             rowMapper
         );
-        return !links.isEmpty() ? links.getFirst() : null;
+        return links.isEmpty() ? null : links.getFirst();
     }
 
+    @Override
     @Transactional
-    public List<LinkDto> findAllByChat(ChatDto chat) {
+    public Collection<LinkDto> findAllByChat(ChatDto chat) {
         return jdbcTemplate.query(
             """
-                SELECT l.* FROM links_to_chats
-                JOIN links l ON l.link_id = links_to_chats.link_id
-                WHERE chat_id = :id
+                SELECT l.* FROM links_to_chats lt
+                JOIN links l ON l.link_id = lt.link_id
+                WHERE lt.chat_id = :chat_id
                 """,
-            new BeanPropertySqlParameterSource(chat),
+            new MapSqlParameterSource().addValue(chatIdTemplate, chat.getChatId()),
             rowMapper
         );
     }
 
-    public List<LinkDto> findOlderThan(int minutes) {
+    @Override
+    public Collection<LinkDto> findLinksNotCheckedSince(int minutes) {
         return jdbcTemplate.query(
-            "select *, now() - updatedAt from links where (now() - updatedAt) > (:interval * interval '1 minute')",
-            new MapSqlParameterSource()
-                .addValue("interval", minutes),
+            "SELECT * FROM links WHERE (NOW() - checked_at) > (:interval * INTERVAL '1 minute')",
+            new MapSqlParameterSource().addValue("interval", minutes),
             rowMapper
         );
     }
 
-    @Transactional
-    public List<ChatDto> getChats(LinkDto link) {
-        return jdbcTemplate.query(
-            "select * from chats where chat_id in (select chat_id from links_to_chats where link_id = :linkId)",
-            new BeanPropertySqlParameterSource(link),
-            new DataClassRowMapper<>(ChatDto.class)
-        );
-    }
-
-    public void update(LinkDto link) {
+    @Override
+    public void updateLastCheckTime(LinkDto link) {
         jdbcTemplate.update(
-            "update links set updated_at = :updatedAt where link_id = :linkId",
+            "UPDATE links SET checked_at = :checkedAt WHERE link_id = :link_id",
+            new MapSqlParameterSource()
+                .addValue("checkedAt", link.getCheckedAt())
+                .addValue(linkIdTemplate, link.getLinkId())
+        );
+    }
+
+    @Override
+    public void refreshLinkActivity(LinkDto link) {
+        jdbcTemplate.update(
+            "UPDATE links SET updated_at = :updatedAt WHERE link_id = :link_id",
             new MapSqlParameterSource()
                 .addValue("updatedAt", link.getUpdatedAt())
-                .addValue(linkId, link.getLinkId())
+                .addValue(linkIdTemplate, link.getLinkId())
+        );
+    }
+
+    @Override
+    @Transactional
+    public Collection<ChatDto> getChats(LinkDto link) {
+        return jdbcTemplate.query(
+            "SELECT * FROM chats "
+                + "WHERE chat_id IN "
+                + "(SELECT chat_id FROM links_to_chats WHERE link_id = :link_id)",
+            new MapSqlParameterSource().addValue(linkIdTemplate, link.getLinkId()),
+            new DataClassRowMapper<>(ChatDto.class)
         );
     }
 }
