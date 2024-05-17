@@ -6,6 +6,7 @@ import edu.java.payload.dto.request.RemoveLinkRequest;
 import edu.java.payload.dto.response.ApiErrorResponse;
 import edu.java.payload.dto.response.LinkResponse;
 import edu.java.payload.dto.response.ListLinksResponse;
+import edu.java.retry.strategy.RetryStrategy;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatusCode;
@@ -18,9 +19,11 @@ public class ScrapperClient {
     private static final String LINKS_PATH = "/links";
     private static final String TG_CHAT_ID_HEADER = "Tg-Chat-Id";
     private static final String TG_CHAT_PATH = "/tg-chat/{id}";
+    private final RetryStrategy retryStrategy;
 
-    public ScrapperClient(@NotNull String baseUrl) {
-        webClient = WebClient.builder().baseUrl(baseUrl).build();
+    public ScrapperClient(@NotNull String baseUrl, RetryStrategy retryStrategy) {
+        this.webClient = WebClient.builder().baseUrl(baseUrl).build();
+        this.retryStrategy = retryStrategy;
     }
 
     public void addChat(Long id) {
@@ -29,6 +32,7 @@ public class ScrapperClient {
             .onStatus(HttpStatusCode::isError, response -> response.bodyToMono(ApiErrorResponse.class)
                 .flatMap(error -> Mono.error(new ScrapperClientException(error.exceptionMessage()))))
             .bodyToMono(Void.class)
+            .retryWhen(retryStrategy.getRetryPolicy())
             .block();
     }
 
@@ -60,6 +64,7 @@ public class ScrapperClient {
             .onStatus(HttpStatusCode::isError, response -> response.bodyToMono(ApiErrorResponse.class)
                 .flatMap(error -> Mono.error(new ScrapperClientException(error.exceptionMessage()))))
             .bodyToMono(LinkResponse.class)
+            .retryWhen(retryStrategy.getRetryPolicy())
             .block();
     }
 
@@ -72,6 +77,7 @@ public class ScrapperClient {
             .onStatus(HttpStatusCode::isError, response -> response.bodyToMono(ApiErrorResponse.class)
                 .flatMap(error -> Mono.error(new ScrapperClientException(error.exceptionMessage()))))
             .bodyToMono(LinkResponse.class)
+            .retryWhen(retryStrategy.getRetryPolicy())
             .block();
     }
 }

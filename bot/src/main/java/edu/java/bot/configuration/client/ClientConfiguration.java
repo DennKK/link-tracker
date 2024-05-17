@@ -1,6 +1,7 @@
-package edu.java.bot.configuration;
+package edu.java.bot.configuration.client;
 
 import edu.java.bot.client.ScrapperClient;
+import edu.java.retry.strategy.RetryStrategy;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -15,7 +16,7 @@ public class ClientConfiguration {
     String baseUrlScrapper;
 
     @Bean
-    public ScrapperClient getScrapperClient() {
-        return new ScrapperClient(baseUrlScrapper);
+    public ScrapperClient getScrapperClient(RetryStrategy retryStrategy) {
+        return new ScrapperClient(baseUrlScrapper, retryStrategy);
     }
 }

@@ -1,7 +1,9 @@
 package edu.java.scrapper.configuration;
 
+import edu.java.scrapper.configuration.domain.AccessType;
+import edu.java.scrapper.configuration.retry.RetryConfig;
+import edu.java.scrapper.configuration.scheduler.Scheduler;
 import jakarta.validation.constraints.NotNull;
-import java.time.Duration;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.validation.annotation.Validated;
 
@@ -12,8 +14,14 @@ public record ApplicationConfig(
     @NotNull
     AccessType accessType,
     @NotNull
-    Scheduler scheduler
+    Scheduler scheduler,
+    @NotNull
+    RetryConfig retry,
+    @NotNull
+    int rateLimit,
+    @NotNull
+    int timeDuration,
+    @NotNull
+    long nanoInSeconds
 ) {
-    public record Scheduler(boolean enable, @NotNull Duration interval, @NotNull Duration forceCheckDelay) {
-    }
 }

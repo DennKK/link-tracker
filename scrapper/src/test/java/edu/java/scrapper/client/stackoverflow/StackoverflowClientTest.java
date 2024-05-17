@@ -1,9 +1,6 @@
-package edu.java.scrapper.stackoverflow;
+package edu.java.scrapper.client.stackoverflow;
 
 import com.github.tomakehurst.wiremock.WireMockServer;
-import edu.java.scrapper.client.stackoverflow.StackoverflowClient;
-import edu.java.scrapper.client.stackoverflow.StackoverflowQuestion;
-import edu.java.scrapper.client.stackoverflow.StackoverflowResponse;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

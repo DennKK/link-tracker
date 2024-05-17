@@ -2,6 +2,7 @@ package edu.java.scrapper.client.tgbot;
 
 import edu.java.payload.dto.request.LinkUpdateRequest;
 import edu.java.payload.dto.response.ApiErrorResponse;
+import edu.java.retry.strategy.RetryStrategy;
 import edu.java.scrapper.client.exception.BotClientException;
 import edu.java.scrapper.domain.dto.LinkDto;
 import jakarta.validation.constraints.NotNull;
@@ -15,15 +16,17 @@ import reactor.core.publisher.Mono;
 @Slf4j
 public class BotClient {
     private final WebClient webClient;
+    private final RetryStrategy retryStrategy;
 
-    public BotClient(@NotNull String baseUrl) {
-        webClient = WebClient.builder().baseUrl(baseUrl).build();
+    public BotClient(@NotNull String baseUrl, RetryStrategy retryStrategy) {
+        this.webClient = WebClient.builder().baseUrl(baseUrl).build();
+        this.retryStrategy = retryStrategy;
     }
 
     public void sendUpdateToBot(LinkDto link, List<Long> chatIds) {
         log.info("Sending update to bot for Link ID: {}, URL: {}", link.getLinkId(), link.getUrl());
-        LinkUpdateRequest request = new LinkUpdateRequest(link.getLinkId(), link.getUrl(), "\n" +
-            "The link has a new activity!", chatIds);
+        LinkUpdateRequest request = new LinkUpdateRequest(link.getLinkId(), link.getUrl(), "\n"
+            + "The link has a new activity!", chatIds);
         update(request);
     }
 
@@ -38,6 +41,7 @@ public class BotClient {
                     return Mono.error(new BotClientException(error.exceptionMessage()));
                 }))
             .bodyToMono(Void.class)
+            .retryWhen(retryStrategy.getRetryPolicy())
             .doOnError(e -> log.error("Error sending update to bot", e))
             .block();
     }

@@ -19,6 +19,18 @@
             <version>${revision}</version>
         </dependency>
 
+        <dependency>
+            <groupId>edu.java</groupId>
+            <artifactId>retry-module</artifactId>
+            <version>${revision}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.github.vladimir-bukhtoyarov</groupId>
+            <artifactId>bucket4j-core</artifactId>
+            <version>7.6.0</version>
+        </dependency>
+
         <!-- Openapi -->
         <dependency>
             <groupId>org.springdoc</groupId>
