@@ -4,7 +4,7 @@ import edu.java.bot.client.exception.ChatNotFoundException;
 import edu.java.bot.client.exception.LinkAlreadyAddedException;
 import edu.java.bot.client.exception.ScrapperClientException;
 import edu.java.bot.client.exception.UserAlreadyRegisteredException;
-import edu.java.bot.response.ApiErrorResponse;
+import edu.java.payload.dto.response.ApiErrorResponse;
 import java.util.ArrayList;
 import java.util.List;
 import org.springframework.http.ResponseEntity;
@@ -18,7 +18,6 @@ import static org.springframework.http.HttpStatus.NOT_FOUND;
 
 @RestControllerAdvice
 public class ExceptionGlobalHandler {
-
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ApiErrorResponse> notValidArgumentHandle(MethodArgumentNotValidException ex) {
         return ResponseEntity.status(BAD_REQUEST)
