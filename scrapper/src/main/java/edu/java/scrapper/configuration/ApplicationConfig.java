@@ -10,6 +10,8 @@ import org.springframework.validation.annotation.Validated;
 public record ApplicationConfig(
     @NotNull int updateFrequency,
     @NotNull
+    AccessType accessType,
+    @NotNull
     Scheduler scheduler
 ) {
     public record Scheduler(boolean enable, @NotNull Duration interval, @NotNull Duration forceCheckDelay) {

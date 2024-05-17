@@ -46,4 +46,12 @@ public class ListenerBot implements Bot {
     public SendMessage process(Update update) {
         return messageProcessor.process(update);
     }
+
+    public void updateRequest(List<Long> chats, String link, String description) {
+        for (Long chat : chats) {
+            String message = "New update for " + link + ":\n" + description;
+            SendMessage sendMessage = new SendMessage(chat, message);
+            listenerBot.execute(sendMessage);
+        }
+    }
 }
